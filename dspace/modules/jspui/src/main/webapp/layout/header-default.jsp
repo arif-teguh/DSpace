@@ -129,7 +129,7 @@
 	
 </header>
 <div class="container" style='text-align: center;'>
-         <a href="<%= request.getContextPath() %>/"><img  src="<%= request.getContextPath() %>/image/iknow-1.png" alt="Logo" /></a>
+         <a href="<%= request.getContextPath() %>/"><img style="max-width: 100%; width: 800px; height: auto;" src="<%= request.getContextPath() %>/image/iknow-.jpg" alt="Logo" /></a>
 	</div>
 
 <main id="content" role="main">

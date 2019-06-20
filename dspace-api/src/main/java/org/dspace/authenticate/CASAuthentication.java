@@ -232,7 +232,7 @@ public class CASAuthentication
 
                         eperson.setCanLogIn(true);
                         AuthenticateServiceFactory.getInstance().getAuthenticationService().initEPerson(context, request, eperson);
-                        // eperson.update();
+                        // EPersonServiceFactory.getInstance().getEPersonService().update(); // eperson.update(); // this line is called from i don't know where so the data is updated
                         context.commit();
                         //context.setIgnoreAuthorization(false);
                         context.restoreAuthSystemState();

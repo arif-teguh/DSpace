@@ -83,7 +83,7 @@ public class CASServlet extends DSpaceServlet
             context.setCurrentLocale(epersonLocale);
             Config.set(request.getSession(), Config.FMT_LOCALE, epersonLocale);
 
-            log.info(LogManager.getHeader(context, "login", "type=explicit"));
+            log.info(LogManager.getHeader(context, "login", "type=implicit_cas"));
 
                 // resume previous request
                 Authenticate.resumeInterruptedRequest(request, response);

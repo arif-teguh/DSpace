@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 // we use the Java CAS client
 import edu.yale.its.tp.cas.client.*;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import org.jasig.cas.client.validation.Assertion;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 
@@ -114,10 +117,33 @@ public class CASAuthentication
     }
 
     /**
-     * No special groups.
+     * Assign special group.
      */
     public List<Group> getSpecialGroups(Context context, HttpServletRequest request)
     {
+	    try
+	    {
+		if( context.getCurrentUser() != null ) {
+			String groupName = configurationService.getProperty("authentication-cas.login.specialgroup", null);
+			if ((groupName != null) && (!groupName.trim().equals("")))
+			{
+				Group specialGroup = EPersonServiceFactory.getInstance().getGroupService().findByName(context, groupName);
+				if (specialGroup == null)
+				{
+					// Oops - the group isn't there.
+					log.warn(LogManager.getHeader(context,
+							"cas_specialgroup",
+							"Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
+					return new ArrayList();
+				} else
+				{
+					return Arrays.asList(specialGroup);
+				}
+			}
+		}
+	    } catch (Exception e) {
+		log.error(LogManager.getHeader(context,"getSpecialGroups",""),e);
+	    }
 	    return new ArrayList();
     }
 
@@ -219,6 +245,11 @@ public class CASAuthentication
 
                         eperson.setFirstName(context, firstName);
                         eperson.setLastName(context, lastName);
+
+			String mailSuffix = configurationService.getProperty("authentication-cas.login.mailsuffix", null);
+			if(mailSuffix != null) {
+			    email = netid+"@"+mailSuffix;
+			}
                         
                         if (email == null) {
                             email = netid;

@@ -38,7 +38,31 @@
 </div>
 </main>
             <%-- Page footer --%>
-             <footer class="navbar navbar-inverse navbar-bottom">
+	    <footer>
+		  <div class="container">
+			<div class="col-lg-4">
+				<img style="width:200px;" src="<%= request.getContextPath() %>/image/iknow-.jpg" /><br/>
+				<img height="80"  src="<%= request.getContextPath() %>/image/logo-ui-fk-imeri.png" alt="Logo" />
+			</div>
+			<div class="col-lg-4">
+				<h3>Quick links</h3>
+				<ul style='list-style: none;padding: 3px;'>
+					<li><a target="_blank" href="http://ui.ac.id">Universitas Indonesia</a></li>
+					<li><a target="_blank" href="http://fk.ui.ac.id">Faculty of Medicine</a></li>
+					<li><a target="_blank" href="http://imeri.fk.ui.ac.id">Indonesia Medical Education and Research Institute</a></li>
+					<li><a target="_blank" href="http://perpustakaan.fk.ui.ac.id">Perpustakaan FKUI</a></li>
+					<li><a target="_blank" href="http://lib.ui.ac.id">UI Library</a></li>
+				</ul>
+			</div>
+			<div class="col-lg-4">
+				<h3>Get in touch</h3>
+				<div>
+					IMERI Management<br/>Education Tower IMERI building, 2nd floor<br/>
+					Jalan Salemba Raya no. 6<br/>Jakarta Pusat, DKI Jakarta, Indonesia<br/>+62 21 29189162
+				</div>
+			</div>
+		  </div>
+             <div class="navbar navbar-inverse navbar-bottom">
              <div id="designedby" class="container text-muted">
             <%-- <fmt:message key="jsp.layout.footer-default.theme-by"/> <a href="http://www.cineca.it"><img
                                     src="<%= request.getContextPath() %>/image/logo-cineca-small.png"
@@ -49,6 +73,7 @@
                                 <a href="<%= request.getContextPath() %>/htmlmap"></a></p>
                                 </div>
 			</div>
+		</div>
     </footer>
     </body>
 </html>

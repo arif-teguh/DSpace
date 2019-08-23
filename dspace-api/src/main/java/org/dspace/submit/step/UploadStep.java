@@ -135,6 +135,19 @@ public class UploadStep extends AbstractProcessingStep
         // get reference to item
         Item item = subInfo.getSubmissionItem().getItem();
 
+	// -----------------------------------
+	// Step #(-1): Check for this item's type (EDIT iKnow)
+	// -----------------------------------
+	String documentType = "";
+	if( (itemService.getMetadataByMetadataString(item, "dc.type") != null) && (itemService.getMetadataByMetadataString(item, "dc.type").size() >0) )
+	{
+	    documentType = itemService.getMetadataByMetadataString(item, "dc.type").get(0).getValue();
+	}
+
+	// TODO change hardcoded type of (Article / Book) to read from configuration instead (with ConfigurationManager.getProperty ***)
+    	if(documentType.contains("Article") || documentType.startsWith("Book")) {
+		return STATUS_COMPLETE;
+    	}
         // -----------------------------------
         // Step #0: Upload new files (if any)
         // -----------------------------------

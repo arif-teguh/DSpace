@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -19,7 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.Collections;
-import java.util.ResourceBundle;
+// import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -32,6 +33,7 @@ import org.dspace.content.Community;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CommunityService;
 import org.dspace.core.Context;
+import org.dspace.core.LogManager;
 
 /**
  * Renders select element to select collection with parent community
@@ -60,6 +62,10 @@ public class AccordCollectionTag extends TagSupport
     /** the community handle to be omitted **/
     private String omit = "123456789/1,123456789/637";
 
+    private Boolean checkbox = false;
+    private List<String> selectedCollections;
+    private List<Collection> selectedCollectionsList;
+
     private String prefix = "accold";
     private String pHeading = prefix + "Heading";
     private String pBody = prefix + "Collapse";
@@ -83,7 +89,18 @@ public class AccordCollectionTag extends TagSupport
             HttpServletRequest hrq = (HttpServletRequest) pageContext.getRequest();
             Context context = UIUtil.obtainContext(hrq);
             List<Collection> collections = (List<Collection>) hrq.getAttribute("collections");
+            List<Collection> selectedCollectionsList = (List<Collection>) hrq.getAttribute("selected.collections");
+	    this.selectedCollectionsList = selectedCollectionsList;
+	    selectedCollections = new ArrayList<String>();
 
+	    if(selectedCollectionsList != null)
+	    for(Collection col : selectedCollectionsList) {
+		selectedCollections.add( col.getID().toString() );
+	    }
+
+
+	    // comMap[handle1] : Set of <handles> of (handle1)'s **sub-communities**
+	    // colMap[handle1] : Set of <handles> of (handle1)'s **collections**
 	    Map<String, Set<String> > comMap, colMap;
 	    Map<String, String> titleMap;
 
@@ -96,25 +113,7 @@ public class AccordCollectionTag extends TagSupport
 	   }
 
 	    String ret = generate(TOP, counter, comMap, colMap, titleMap);
-	    // log.info( Logger
-
-  //          ResourceBundle msgs = ResourceBundle.getBundle("Messages", context.getCurrentLocale());
-  //          String firstOption = msgs.getString("jsp.submit.start-lookup-submission.select.collection.defaultoption");
-  /*          sb.append("<option value=\"-1\"");
-            if (collection == null) sb.append(" selected=\"selected\"");
-            sb.append(">").append(firstOption).append("</option>\n");
-
-            for (Collection coll : collections)
-            {
-                sb.append("<option value=\"").append(coll.getID()).append("\"");
-                if (collection.equals(coll.getID().toString()))
-                {
-                    sb.append(" selected=\"selected\"");
-                }
-                sb.append(">").append(CollectionDropDown.collectionPath(context, coll)).append("</option>\n");
-            }
-
-            sb.append("</select>\n"); */
+	    log.info( LogManager.getHeader(context, "accord_tag", "collectionID = " + this.collection) );
 
             out.print(ret);
         }
@@ -180,6 +179,21 @@ public class AccordCollectionTag extends TagSupport
         this.collection = collection;
     }
 
+    public Boolean getCheckbox() {
+	return this.checkbox;
+    }
+    public void setCheckbox(Boolean bool) {
+	this.checkbox = bool;
+    }
+
+    public List<String> getSelectedCollections() {
+	    return this.selectedCollections;
+    }
+
+    public void setSelectedCollections(List<String> sc) {
+	    this.selectedCollections = sc;
+    }
+
     public void release()
     {
         klass = null;
@@ -220,6 +234,11 @@ public class AccordCollectionTag extends TagSupport
 	// we always call this function on COMMUNITy ~> currentCommunity. As this community exists in the list, by definition it should Always have at least one child community OR one child collection
 	
 	// TODO: implement `filter` here
+	// filtering implementation will ease the process of 'hiding' certain collections from the select Collection page
+	// only by configuring it in the .cfg file. No need to peek on the source code.
+	// right now, it is hardcoded. All collections under "Organ Systems" community will not appear.
+	// beside that, the "omit" attribute has already done this also.
+	//
 	// filterList = configurationManager.getList(...)
 	// filterList = attribute_filter
 	// if( filterList.indexOf(current) )
@@ -230,6 +249,8 @@ public class AccordCollectionTag extends TagSupport
 	StringBuffer buf = new StringBuffer();
 	
 	if(!current.equals(TOP)) {
+		// TODO enhancement - this could see some improvement | 
+		// change color when there is at least one descendant selected
 		buf.append("<div class='panel panel-default'>");
 		buf.append("<div class='panel-heading' id='" + pHeading + Integer.toString(counter) + "'>");
 		buf.append("<a role='button' data-toggle='collapse' data-parent='#" + prefix + parentCounter + "' ");
@@ -258,12 +279,15 @@ public class AccordCollectionTag extends TagSupport
 	if( colMap.containsKey(current) )
 	{
 		buf.append("<div>");	
+		String elemType = this.checkbox ? "checkbox" : "radio";
 		Iterator<String> it = colMap.get(current).iterator();
 		while(it.hasNext()) {
 			String col = it.next();
-			buf.append("<label><input type='radio' name='" + name + "' value='" + titleMap.get("id-" + col) + "' ");
-			if( collection.equals( titleMap.get("id-" + col) ) )
-				buf.append("checked='checked'");
+			buf.append("<label><input type='" + elemType + "' name='" + name + "' value='" + titleMap.get("id-" + col) + "' ");
+			if( this.collection.equals( titleMap.get("id-" + col) ) )
+				buf.append("disabled='disabled' checked='checked'");
+			else if( selectedCollections.contains( titleMap.get("id-" + col) ) )
+				buf.append(" checked='checked' ");
 			buf.append("> " + titleMap.get(col) + "</input></label><br/>" );
 		}
 		buf.append("</div>");
@@ -276,5 +300,6 @@ public class AccordCollectionTag extends TagSupport
 	}
 	return buf.toString();
     }
+
 }
 

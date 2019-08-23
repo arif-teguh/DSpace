@@ -32,6 +32,7 @@ import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
+import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.content.service.BitstreamService;
@@ -145,6 +146,7 @@ public class JSPUploadStep extends JSPStep
         if (subInfo != null)
         {
             Collection c = subInfo.getSubmissionItem().getCollection();
+            Item item = subInfo.getSubmissionItem().getItem();
             try
             {
                 DCInputsReader inputsReader = new DCInputsReader();
@@ -156,6 +158,15 @@ public class JSPUploadStep extends JSPStep
                 throw new ServletException(e);
             }
 
+		// Fetch the document type (dc.type)
+	    String documentType = "";
+            if( (itemService.getMetadataByMetadataString(item, "dc.type") != null) && (itemService.getMetadataByMetadataString(item, "dc.type").size() >0) )
+	    { documentType = itemService.getMetadataByMetadataString(item, "dc.type").get(0).getValue(); }
+
+	    // TODO change hardcoded type of (Article / Book) to read from configuration instead (with ConfigurationManager.getProperty ***)
+	    if(documentType.contains("Article") || documentType.startsWith("Book")) {
+		return;
+	    }
             // show whichever upload page is appropriate
             // (based on if this item already has files or not)
             showUploadPage(context, request, response, subInfo, false);

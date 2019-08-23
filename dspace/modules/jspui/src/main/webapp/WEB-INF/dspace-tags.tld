@@ -621,5 +621,16 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     
+   <attribute>
+      <name>checkbox</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+
+   <attribute>
+      <name>selected-collections</name>
+      <required>false</required>
+      <type>java.util.List</type>
+    </attribute>
   </tag>  
 </taglib>

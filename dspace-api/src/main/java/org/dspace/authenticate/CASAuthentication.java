@@ -8,6 +8,7 @@
 package org.dspace.authenticate;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,17 @@ import edu.yale.its.tp.cas.client.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.jasig.cas.client.validation.Assertion;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+// import org.jasig.cas.client.validation.Assertion;
+// import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+
+// CAS XML Response Parsing
+import javax.xml.parsers.ParserConfigurationException; 
+import javax.xml.parsers.SAXParserFactory; 
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Authenticator for Central Authentication Service (CAS).
@@ -48,6 +58,9 @@ import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
  * @author Tomasz Baria Boiński, Gdańsk University of Technology
  * CAS authentication has been adapted to DSpace 4.2 and integrated with SAML user query
  * @version $Revision 1.2 $
+ * @author Muhammad Aji Muharrom, Universitas Indonesia
+ * Customized version of CAS Authentication for SSO-UI. Enhanced with XML parsing for getting user attributes.
+ * @version $Revision 1.3 $
  */
 
 public class CASAuthentication
@@ -62,6 +75,10 @@ public class CASAuthentication
     private String firstName = "University";
     private String lastName = "User";
     private String email = null;
+
+    protected Boolean isFK = false;
+    protected List<String> kdOrg = new ArrayList<>();
+    protected String namaLdap;
 
     private Map attributes = null;
 
@@ -308,7 +325,7 @@ public class CASAuthentication
    * @throws javax.servlet.ServletException
    */
   public String validate(String service, String ticket, String validateURL)
-      throws IOException, ServletException
+      throws IOException, ServletException, ParserConfigurationException, SAXException
   {
 	String netid = null;
 	firstName = "University";
@@ -340,8 +357,41 @@ public class CASAuthentication
 	if (!stv.isAuthenticationSuccesful()) {
 		return null;
 	}
+	
+	// We will receive XML Response as such
+	// <cas:serviceResponse>
+	// 	<cas:authenticationSuccess>
+	// 		<cas:user>...</cas:user>
+	// 		<cas:attributes>
+	// 			<cas:ldap_cn>{NAME IN CAPITAL}</cas:ldap_cn>
+	// 			<cas:kd_org>{XX.00.01.01 if FK}</cas:kd_org>
+	// 			<cas:kd_org>{AA.BB.CC.DD}</cas:kd_org>
+	// 			<cas:nama>{nama role 1}#{nama role 2}</cas:nama>
+	// 			<cas:peran_user>mahasiswa</cas:peran_user>
+	// 			<cas:npm>NPM1#NPM2</cas:npm>
+	// 		</cas:attributes>
+	// 	</cas:authenticationSuccess>
+	// </cas:serviceResponse>
+	// Parse XML based on legacy code archived in : http://www.javased.com/index.php?source_dir=nuxeo-platform-login/nuxeo-platform-login-cas2/src/main/java/edu/yale/its/tp/cas/client/ServiceTicketValidator.java
+	String xmlResponse = stv.getResponse();
+	parse( xmlResponse );
+
+	if( !this.isFK ) {
+		// TODO add error message "unauthorized access"
+		return null;
+	}
+
 	netid = stv.getUser();
-//	attributes = stv.getAttributes();
+
+	// name parsing
+	String nama = namaLdap.trim();
+	int i = nama.length()-1; 
+	while(i >= 0 && nama.charAt(i) != ' ') --i; if(i != 0) ++i;
+	lastName = nama.substring(i);
+
+	if(i == 0) i = nama.length();
+	firstName = nama.substring(0, i-1).trim();
+
 	log.info("Authenticated user via CAS: " + netid);
 	return netid;
   }
@@ -410,5 +460,60 @@ public class CASAuthentication
         return "org.dspace.eperson.CASAuthentication.title";
     }
 
-}
+    private void parse( String response ) 
+	throws ParserConfigurationException, SAXException, IOException {
+	XMLReader r =  SAXParserFactory.newInstance().newSAXParser().getXMLReader(); 
+        r.setFeature("http://xml.org/sax/features/namespaces", false); 
+        r.setContentHandler(newHandler()); 
+        r.parse(new InputSource(new StringReader(response)));
+    }
 
+    protected DefaultHandler newHandler() { return new Handler(); }
+
+    protected class Handler extends DefaultHandler {
+    
+        //**********************************************
+        // Constants
+    
+        protected static final String USER = "cas:user";
+        protected static final String LDAP_CN = "cas:ldap_cn";
+        protected static final String KD_ORG = "cas:kd_org";
+        protected static final String NAMA = "cas:nama"; 
+    
+        //**********************************************
+        // Parsing state
+    
+        protected StringBuffer currentText = new StringBuffer();
+        protected String netid, pgtIou, errorCode, errorMessage;
+    
+    
+        //**********************************************
+        // Parsing logic
+    
+        public void startElement(String ns, String ln, String qn, Attributes a) {
+          // clear the buffer
+          currentText = new StringBuffer();
+    
+        }
+    
+        public void characters(char[] ch, int start, int length) {
+          // store the body, in stages if necessary
+          currentText.append(ch, start, length);
+        }
+    
+        public void endElement(String ns, String ln, String qn)
+            throws SAXException {
+          
+		if(qn.equals(LDAP_CN)) {
+	    		CASAuthentication.this.namaLdap = currentText.toString();
+		} else if (qn.equals(KD_ORG)) {
+	   		CASAuthentication.this.kdOrg.add( currentText.toString() );
+			if( currentText.toString().endsWith("00.01.01") )
+				CASAuthentication.this.isFK = true;
+		}
+    
+        }
+    
+     }
+
+}

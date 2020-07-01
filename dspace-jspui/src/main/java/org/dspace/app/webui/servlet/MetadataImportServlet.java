@@ -48,7 +48,7 @@ public class MetadataImportServlet extends DSpaceServlet
     public void init()
     {
         // Set the lmimt to the number of items that may be changed in one go, default to 20
-        limit = ConfigurationManager.getIntProperty("bulkedit", "gui-item-limit", 101);
+        limit =101 ;
         log.debug("Setting bulk edit limit to " + limit + " items");
     }
 
@@ -78,7 +78,7 @@ public class MetadataImportServlet extends DSpaceServlet
             {
                 // Get the changes
                 log.info(LogManager.getHeader(context, "metadataimport", "loading file"));
-                List<BulkEditChange> changes = processUpload(context, request);
+                List<BulkEditChange> changes = processUpload(context, request); 
                 log.debug(LogManager.getHeader(context, "metadataimport", changes.size() + " items with changes identified"));                
 
                 // Were there any changes detected?

@@ -159,6 +159,17 @@
 	function validateFilters() {
 		return document.getElementById("filterquery").value.length > 0;
 	}
+
+
+	function printPageArea(areaID){
+		var printContent = document.getElementById(areaID);
+		var WinPrint = window.open('', '', 'width=900,height=650');
+		WinPrint.document.write(printContent.innerHTML);
+		WinPrint.document.close();
+		WinPrint.focus();
+		WinPrint.print();
+		WinPrint.close();
+	}
 </script>		
 </c:set>
 
@@ -411,6 +422,7 @@
     }
 %>
 </form>
+	<button onclick="printPageArea('discovery-result-results')">Print</button>
    </div>
 </div>   
 <% 

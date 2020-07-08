@@ -304,7 +304,12 @@
     <servlet-name>batchimport</servlet-name>
     <servlet-class>org.dspace.app.webui.servlet.BatchImportServlet</servlet-class>
   </servlet>
-  
+
+  <servlet>
+    <servlet-name>deduplicate</servlet-name>
+    <servlet-class>org.dspace.app.webui.servlet.DeduplicateServlet</servlet-class>
+  </servlet>
+
   <servlet>
     <servlet-name>metadata-field-registry</servlet-name>
     <servlet-class>org.dspace.app.webui.servlet.admin.MetadataFieldRegistryServlet</servlet-class>
@@ -651,6 +656,11 @@
     <url-pattern>/dspace-admin/batchimport</url-pattern>
   </servlet-mapping>
   
+  <servlet-mapping>
+    <servlet-name>batchimport</servlet-name>
+    <url-pattern>/dspace-admin/deduplicate</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>metadata-field-registry</servlet-name>
     <url-pattern>/dspace-admin/metadata-field-registry</url-pattern>

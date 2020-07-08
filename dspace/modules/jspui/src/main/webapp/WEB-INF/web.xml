@@ -304,7 +304,12 @@
     <servlet-name>batchimport</servlet-name>
     <servlet-class>org.dspace.app.webui.servlet.BatchImportServlet</servlet-class>
   </servlet>
-  
+
+  <servlet>
+    <servlet-name>deduplicate</servlet-name>
+    <servlet-class>org.dspace.app.webui.servlet.DeduplicateServlet</servlet-class>
+  </servlet>
+
   <servlet>
     <servlet-name>metadata-field-registry</servlet-name>
     <servlet-class>org.dspace.app.webui.servlet.admin.MetadataFieldRegistryServlet</servlet-class>
@@ -479,22 +484,12 @@
     <servlet-class>org.dspace.app.webui.servlet.RequestItemServlet</servlet-class>
   </servlet>
     	
-  <servlet>
-    <servlet-name>cas-login</servlet-name>
-    <servlet-class>org.dspace.app.webui.servlet.CASServlet</servlet-class>
-  </servlet>
-
   <servlet-mapping>
     <servlet-name>shibboleth-login</servlet-name>
     <url-pattern>/shibboleth-login</url-pattern>
   </servlet-mapping>
  
   <!-- Servlet Mappings -->
-
-  <servlet-mapping>
-    <servlet-name>cas-login</servlet-name>
-    <url-pattern>/cas-login</url-pattern>
-  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>authorize</servlet-name>
@@ -661,6 +656,11 @@
     <url-pattern>/dspace-admin/batchimport</url-pattern>
   </servlet-mapping>
   
+  <servlet-mapping>
+    <servlet-name>deduplicate</servlet-name>
+    <url-pattern>/dspace-admin/deduplicate</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>metadata-field-registry</servlet-name>
     <url-pattern>/dspace-admin/metadata-field-registry</url-pattern>

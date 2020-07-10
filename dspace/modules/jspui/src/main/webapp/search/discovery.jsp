@@ -118,6 +118,15 @@
 %>
 
 <c:set var="dspace.layout.head.last" scope="request">
+
+
+	<style>
+		@media print {
+		  a[href]:after {
+			content: none !important;
+		  }
+		}
+		</style>
 <script type="text/javascript">
 	var jQ = jQuery.noConflict();
 	jQ(document).ready(function() {

@@ -682,6 +682,10 @@ public class ItemTag extends TagSupport
         }
 
         listCollections();
+		
+		String googleDriveEmbedUrl = 
+         "<iframe src=\"https://drive.google.com/file/d/1LaAKTs2OZqfshBv3ZJ6OSUA7VyYZ2mXY/preview\" width=\"400\" height=\"300\"></iframe>";
+        out.println(googleDriveEmbedUrl);
 
         out.println("</table><br/>");
 

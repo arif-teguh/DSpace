@@ -118,6 +118,15 @@
 %>
 
 <c:set var="dspace.layout.head.last" scope="request">
+
+
+	<style>
+		@media print {
+		  a[href]:after {
+			content: none !important;
+		  }
+		}
+		</style>
 <script type="text/javascript">
 	var jQ = jQuery.noConflict();
 	jQ(document).ready(function() {
@@ -159,6 +168,19 @@
 	function validateFilters() {
 		return document.getElementById("filterquery").value.length > 0;
 	}
+
+
+	function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+	}
+
 </script>		
 </c:set>
 
@@ -411,6 +433,7 @@
     }
 %>
 </form>
+	<input class="btn btn-default" type="button" onclick="printDiv('print-area')" value="Print search result" />
    </div>
 </div>   
 <% 
@@ -470,7 +493,7 @@ else if( qResults != null)
 
 %>
 <hr/>
-<div class="discovery-result-pagination row" style='padding: 15px;'>
+<div class="discovery-result-pagination row container">
 <%
 	long lastHint = qResults.getStart()+qResults.getMaxResults() <= qResults.getTotalSearchResults()?
 	        qResults.getStart()+qResults.getMaxResults():qResults.getTotalSearchResults();
@@ -539,8 +562,7 @@ else if( qResults != null)
 	</ul>
 <!-- give a content to the div -->
 </div>
-
-<div class="discovery-result-results">
+<div id = "print-area" class="discovery-result-results">
 <% if (communities.size() > 0 ) { %>
     <div class="panel panel-info">
     <div class="panel-heading"><fmt:message key="jsp.search.results.comhits"/></div>

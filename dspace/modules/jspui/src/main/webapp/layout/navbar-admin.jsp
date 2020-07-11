@@ -54,7 +54,7 @@
            <span class="icon-bar"></span>
            <span class="icon-bar"></span>
          </button>
-         <a class="navbar-brand" href="<%= request.getContextPath() %>/"><img height="70" src="<%= request.getContextPath() %>/image/logo-ui-fk-imeri.png" alt="Logo" /></a>
+         <a class="navbar-brand" href="<%= request.getContextPath() %>/"><img height="25" src="<%= request.getContextPath() %>/image/dspace-logo-only.png" alt="DSpace logo" /></a>
        </div>
        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
          <ul class="nav navbar-nav">
@@ -73,6 +73,7 @@
                <li><a href="<%= request.getContextPath() %>/dspace-admin/privateitems"><fmt:message key="jsp.layout.navbar-admin.privateitems"/></a></li>
                <li><a href="<%= request.getContextPath() %>/dspace-admin/metadataimport"><fmt:message key="jsp.layout.navbar-admin.metadataimport"/></a></li>
                <li><a href="<%= request.getContextPath() %>/dspace-admin/batchimport"><fmt:message key="jsp.layout.navbar-admin.batchimport"/></a></li>             
+               <li><a href="<%= request.getContextPath() %>/dspace-admin/deduplicate"><fmt:message key="jsp.layout.navbar-admin.deduplicate"/></a></li>             
             </ul>
           </li>
                           

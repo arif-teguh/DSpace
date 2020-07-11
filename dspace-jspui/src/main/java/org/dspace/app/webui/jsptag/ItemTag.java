@@ -675,7 +675,7 @@ public class ItemTag extends TagSupport
                             out.print(Utils.addEntities(val.getValue()));
                         }
                     }
-					out.println("test val")
+					out.println("test val");
 					out.println(val);
                 }
 

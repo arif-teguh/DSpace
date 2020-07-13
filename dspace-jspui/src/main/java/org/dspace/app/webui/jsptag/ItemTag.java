@@ -565,6 +565,8 @@ public class ItemTag extends TagSupport
                 int j = 0;
                 for (MetadataValue val : values)
                 {
+					
+					
                     if (val != null && val.getValue() != null)
                     {
                         if (j > 0)
@@ -675,10 +677,15 @@ public class ItemTag extends TagSupport
                             out.print(Utils.addEntities(val.getValue()));
                         }
                     }
-					out.println("test val");
-					out.println(val);
+					//out.println("test val");
+					//out.println(val.getValue());
                 }
-
+				// Test
+				for (MetadataValue val : values) {
+					out.println("TEST FOR");
+					out.println(val.getValue());
+					
+				}
                 out.println("</td></tr>");
             }
         }
@@ -687,7 +694,7 @@ public class ItemTag extends TagSupport
 		
 		String googleDriveEmbedUrl = 
          "<iframe src=\"https://drive.google.com/file/d/1LaAKTs2OZqfshBv3ZJ6OSUA7VyYZ2mXY/preview\" width=\"400\" height=\"300\"></iframe>";
-        out.println(googleDriveEmbedUrl);
+        // out.println(googleDriveEmbedUrl);
 
         out.println("</table><br/>");
 

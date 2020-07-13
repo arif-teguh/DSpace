@@ -677,15 +677,10 @@ public class ItemTag extends TagSupport
                             out.print(Utils.addEntities(val.getValue()));
                         }
                     }
-					//out.println("test val");
-					//out.println(val.getValue());
-                }
-				// Test
-				for (MetadataValue val : values) {
-					out.println("TEST FOR");
+					out.println("test val: \n");
 					out.println(val.getValue());
-					
-				}
+                }
+
                 out.println("</td></tr>");
             }
         }

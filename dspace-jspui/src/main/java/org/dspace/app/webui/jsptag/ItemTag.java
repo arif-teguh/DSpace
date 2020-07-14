@@ -677,8 +677,12 @@ public class ItemTag extends TagSupport
                             out.print(Utils.addEntities(val.getValue()));
                         }
                     }
-					out.println("test val: \n");
-					out.println(val.getValue());
+					out.println(val.getValue().getClass().getName());
+					if (val.getValue().contains("iframe")) {
+						out.println(val.getValue().getClass().getName());
+						out.println(val.getValue());
+					}
+					
                 }
 
                 out.println("</td></tr>");

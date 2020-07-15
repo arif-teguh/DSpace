@@ -10,6 +10,9 @@ tags
 .project
 .classpath
 
+
+
+
 ## Ignore project files created by IntelliJ IDEA
 *.iml
 *.ipr
@@ -39,3 +42,10 @@ META-INF/
 
 ##Mac noise
 .DS_Store
+
+## ant build ignore 
+/etc/
+/webapps/
+/lib/
+/solr/
+/config/

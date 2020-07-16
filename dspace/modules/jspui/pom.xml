@@ -55,9 +55,9 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.dspace.modules</includeGroupIds>
-                            <includeArtifactIds>additions</includeArtifactIds>
-                            <!--NOTE: by default this will also unpack transitive dependencies. To disable, uncomment this next line:
+                        
+                        <includeGroupIds>org.dspace.modules,de.the-library-code.dspace</includeGroupIds>
+                        <includeArtifactIds>additions,addon-duplication-detection-service-api</includeArtifactIds>    <!--NOTE: by default this will also unpack transitive dependencies. To disable, uncomment this next line:
                             <excludeTransitive>true</excludeTransitive>
                             -->
                             <outputDirectory>${project.build.directory}/additions</outputDirectory>
@@ -86,9 +86,14 @@
                     <overlays>
                         <overlay />
                         <overlay>
+                            <groupId>de.the-library-code.dspace</groupId>
+                            <artifactId>addon-duplication-detection-service-jspui</artifactId>
+                        <type>war</type>
+                        </overlay>
+                        <overlay>
                             <groupId>org.dspace</groupId>
                             <artifactId>dspace-jspui</artifactId>
-                            <type>war</type>
+                        <type>war</type>
                         </overlay>
                     </overlays>
                 </configuration>
@@ -125,6 +130,19 @@
            <groupId>javax.servlet</groupId>
            <artifactId>servlet-api</artifactId>
            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.the-library-code.dspace</groupId>
+            <artifactId>addon-duplication-detection-service-api</artifactId>
+            <version>[6.3.0,6.4.0)</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>de.the-library-code.dspace</groupId>
+            <artifactId>addon-duplication-detection-service-jspui</artifactId>
+            <version>[6.3.0,6.4.0)</version>
+            <type>war</type>
         </dependency>
     </dependencies>
 

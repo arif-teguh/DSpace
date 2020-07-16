@@ -120,6 +120,14 @@
        <jspui-binding>org.dspace.app.webui.submit.step.JSPSampleStep</jspui-binding>
        <workflow-editable>true</workflow-editable>
      </step>
+
+
+       <step id="duplicate-detection">
+         <heading>submit.progressbar.duplicate-detection</heading>
+         <processing-class>org.dspace.submit.step.DuplicateDetectionStep</processing-class>
+         <jspui-binding>org.dspace.app.webui.submit.step.JSPDuplicateDetectionStep</jspui-binding>
+         <workflow-editable>true</workflow-editable>
+     </step>
  </step-definitions>
 
  <!-- The submission-definitions map lays out the detailed definition of   -->
@@ -182,6 +190,7 @@
 		<processing-class>org.dspace.submit.step.SkipInitialQuestionsStep</processing-class>
 	 </step>
 
+    
 	      <!--Step 2 will be to Describe the item.-->
 	      <step>
 		<heading>submit.progressbar.describe</heading>
@@ -190,6 +199,8 @@
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.DescribeStep</xmlui-binding>
 		<workflow-editable>true</workflow-editable>
 	      </step>
+
+    <step id="duplicate-detection" />
 	      
 	       <step>
 		   <heading>submit.progressbar.access</heading>

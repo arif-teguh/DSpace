@@ -200,7 +200,7 @@
 		<workflow-editable>true</workflow-editable>
 	      </step>
 
-    <step id="duplicate-detection" />
+    
 	      
 	       <step>
 		   <heading>submit.progressbar.access</heading>

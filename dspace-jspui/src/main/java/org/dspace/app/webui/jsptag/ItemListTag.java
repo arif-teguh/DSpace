@@ -349,7 +349,7 @@ public class ItemListTag extends TagSupport
                 {
                 	markClass = " "+field+"_th";
                 }
-                if
+            
 
                 // output the header
                 out.print("<th id=\"" + id +  "\" class=\"" + css + markClass +"\">"

@@ -101,6 +101,8 @@ public class ItemListTag extends TagSupport
 
     private static String authorField = "dc.contributor.*";
 
+    private static String publisherField = "dc.publisher" ;
+
     private int authorLimit = -1;
 
     private transient SortOption sortOption = null;
@@ -128,13 +130,13 @@ public class ItemListTag extends TagSupport
 
         if (showThumbs)
         {
-            DEFAULT_LIST_FIELDS = new String[] {"thumbnail", "dc.date.issued(date)", "dc.title", "dc.contributor.*"};
-            DEFAULT_LIST_WIDTHS = new String[] {"*", "130", "60%", "40%"};
+            DEFAULT_LIST_FIELDS = new String[] {"thumbnail", "dc.date.issued(date)", "dc.title", "dc.contributor.*","dc.publisher"};
+            DEFAULT_LIST_WIDTHS = new String[] {"*", "130", "50%", "30%","20"};
         }
         else
         {
-            DEFAULT_LIST_FIELDS = new String[] {"dc.date.issued(date)", "dc.title", "dc.contributor.*"};
-            DEFAULT_LIST_WIDTHS = new String[] {"130", "60%", "40%"};
+            DEFAULT_LIST_FIELDS = new String[] {"dc.date.issued(date)", "dc.title", "dc.contributor.*","dc.publisher"};
+            DEFAULT_LIST_WIDTHS = new String[] {"130", "50%", "30%","20"};
         }
 
         // get the date and title fields
@@ -154,6 +156,12 @@ public class ItemListTag extends TagSupport
         if (authorLine != null)
         {
             authorField = authorLine;
+        }
+
+        String publisherLine = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("webui.browse.index.publisher");
+        if (publisherLine != null)
+        {
+            publisherField = publisherLine;
         }
     }
 
@@ -341,6 +349,7 @@ public class ItemListTag extends TagSupport
                 {
                 	markClass = " "+field+"_th";
                 }
+                if
 
                 // output the header
                 out.print("<th id=\"" + id +  "\" class=\"" + css + markClass +"\">"
@@ -360,6 +369,7 @@ public class ItemListTag extends TagSupport
                         + "&nbsp;" //LocaleSupport.getLocalizedMessage(pageContext, message)
                         + (emph[emph.length - 2] ? "</strong>" : "") + "</th>");
             }
+            
 
             out.print("</tr>");
 

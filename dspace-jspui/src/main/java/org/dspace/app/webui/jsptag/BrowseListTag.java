@@ -103,6 +103,8 @@ public class BrowseListTag extends TagSupport
 
     private static String authorField = "dc.contributor.*";
 
+    private static String publisherField = "dc.publisher" ;
+
     private int authorLimit = -1;
 
     private transient BrowseInfo browseInfo;
@@ -130,13 +132,13 @@ public class BrowseListTag extends TagSupport
 
         if (showThumbs)
         {
-            DEFAULT_LIST_FIELDS = new String[]{"thumbnail", "dc.date.issued(date)", "dc.title", "dc.contributor.*"};
-            DEFAULT_LIST_WIDTHS = new String[]{"*", "130", "60%", "40%"};
+            DEFAULT_LIST_FIELDS = new String[] {"thumbnail", "dc.date.issued(date)", "dc.title", "dc.contributor.*","dc.publisher"};
+            DEFAULT_LIST_WIDTHS = new String[] {"*", "130", "50%", "30%","20"};
         }
         else
         {
-            DEFAULT_LIST_FIELDS = new String[]{"dc.date.issued(date)", "dc.title", "dc.contributor.*"};
-            DEFAULT_LIST_WIDTHS = new String[]{"130", "60%", "40%"};
+            DEFAULT_LIST_FIELDS = new String[] {"dc.date.issued(date)", "dc.title", "dc.contributor.*","dc.publisher"};
+            DEFAULT_LIST_WIDTHS = new String[] {"130", "50%", "30%","20"};
         }
 
         // get the date and title fields
@@ -157,6 +159,11 @@ public class BrowseListTag extends TagSupport
         if (authorLine != null)
         {
         	authorField = authorLine;
+        }
+        String publisherLine = DSpaceServicesFactory.getInstance().getConfigurationService().getProperty("webui.browse.index.publisher");
+        if (publisherLine != null)
+        {
+            publisherField = publisherLine;
         }
     }
 

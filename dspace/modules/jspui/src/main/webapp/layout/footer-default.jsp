@@ -61,6 +61,8 @@
 					Jalan Salemba Raya no. 6<br/>Jakarta Pusat, DKI Jakarta, Indonesia<br/>+62 21 29189162
 				</div>
 			</div>
+			<script type="text/javascript" src="https://www.stat-counter.org/count/63ws"></script><br>
+ <a href='https://www.free-counters.org/'>free HitCounters</a> <script type='text/javascript' src='https://whomania.com/ctr?id=f46f8cc84cf7eddb63cc842a0646ab4a247bd789'></script>
 		  </div>
              <div class="navbar navbar-inverse navbar-bottom">
              <div id="designedby" class="container text-muted">

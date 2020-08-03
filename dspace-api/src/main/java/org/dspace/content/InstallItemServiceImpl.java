@@ -178,8 +178,8 @@ public class InstallItemServiceImpl implements InstallItemService
             }
         }
 
-         String provDescription = "Made available in DSpace on " + now
-                + " (GMT). " + getBitstreamProvenanceMessage(c, item);
+        // String provDescription = "Made available in DSpace on " + now
+        //        + " (GMT). " + getBitstreamProvenanceMessage(c, item);
 
         // If an issue date was passed in and it wasn't set to "today" (literal string)
         // then note this previous issue date in provenance message
@@ -189,13 +189,13 @@ public class InstallItemServiceImpl implements InstallItemService
             if(previousDateIssued!=null && !previousDateIssued.equalsIgnoreCase("today"))
             {
                 DCDate d = new DCDate(previousDateIssued);
-                provDescription = provDescription + "  Previous issue date: "
-                        + d.toString();
+                //provDescription = provDescription + "  Previous issue date: "
+                //        + d.toString();
             }
         }
 
         // Add provenance description
-        itemService.addMetadata(c, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", provDescription);
+        // itemService.addMetadata(c, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", provDescription);
     }
 
     /**

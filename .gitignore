@@ -49,3 +49,5 @@ META-INF/
 /lib/
 /solr/
 /config/
+/log/
+/upload/

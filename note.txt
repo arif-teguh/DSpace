@@ -1,0 +1,5 @@
+dari https://www.howtogeek.com/112674/how-to-find-files-and-folders-in-linux-using-the-command-line/:
+tambahin xmlui.xml, jspui.xml, tp blom tentu berhasil
+
+
+cara search string di file: grep -iRl "imeri" /home/gema/Desktop/test/KPWORKING 

@@ -136,30 +136,25 @@ public class CASAuthentication
     /**
      * Assign special group.
      */
-    public List<Group> getSpecialGroups(Context context, HttpServletRequest request)
-    {
-	    try
-	    {
-		if( context.getCurrentUser() != null ) {
-			String groupName = configurationService.getProperty("authentication-cas.login.specialgroup", null);
-			if ((groupName != null) && (!groupName.trim().equals("")))
-			{
-				Group specialGroup = EPersonServiceFactory.getInstance().getGroupService().findByName(context, groupName);
-				if (specialGroup == null)
-				{
-					// Oops - the group isn't there.
-					log.warn(LogManager.getHeader(context,
-							"cas_specialgroup",
-							"Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
-					return new ArrayList();
-				} else
-				{
-					return Arrays.asList(specialGroup);
-				}
-			}
-		}
+    public List<Group> getSpecialGroups(Context context, HttpServletRequest request) {
+	    try {
+            if (context.getCurrentUser() != null) {
+                String groupName = configurationService.getProperty("authentication-cas.login.specialgroup", null);
+                if ((groupName != null) && (!groupName.trim().equals(""))) {
+                    Group specialGroup = EPersonServiceFactory.getInstance().getGroupService().findByName(context, groupName);
+                    if (specialGroup == null) {
+                        // Oops - the group isn't there.
+                        log.warn(LogManager.getHeader(context,
+                                "cas_specialgroup",
+                                "Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
+                        return new ArrayList();
+                    } else {
+                        return Arrays.asList(specialGroup);
+                    }
+                }
+		    }
 	    } catch (Exception e) {
-		log.error(LogManager.getHeader(context,"getSpecialGroups",""),e);
+		    log.error(LogManager.getHeader(context,"getSpecialGroups",""),e);
 	    }
 	    return new ArrayList();
     }
@@ -336,11 +331,11 @@ public class CASAuthentication
 	String validateUrl = null;
 
 	if (ticket.startsWith("ST")) {
-	stv = new ServiceTicketValidator();
+	    stv = new ServiceTicketValidator();
 	} else {
-	// uPortal uses this
-	stv = new ProxyTicketValidator();
-	validateUrl = casProxyvalidate;
+        // uPortal uses this
+        stv = new ProxyTicketValidator();
+        validateUrl = casProxyvalidate;
 	}
 
 	stv.setCasValidateUrl(validateURL);
@@ -374,9 +369,9 @@ public class CASAuthentication
 	// </cas:serviceResponse>
 	// Parse XML based on legacy code archived in : http://www.javased.com/index.php?source_dir=nuxeo-platform-login/nuxeo-platform-login-cas2/src/main/java/edu/yale/its/tp/cas/client/ServiceTicketValidator.java
 	String xmlResponse = stv.getResponse();
-	parse( xmlResponse );
+	parse(xmlResponse);
 
-	if( !this.isFK ) {
+	if (!this.isFK) {
 		// TODO add error message "unauthorized access"
 		return null;
 	}
@@ -386,11 +381,18 @@ public class CASAuthentication
 	// name parsing
 	String nama = namaLdap.trim();
 	int i = nama.length()-1; 
-	while(i >= 0 && nama.charAt(i) != ' ') --i; if(i != 0) ++i;
+	while(i >= 0 && nama.charAt(i) != ' ') {
+        --i; 
+        if (i != 0) {
+            ++i;
+        }
+    } 
 	lastName = nama.substring(i);
 
-	if(i == 0) i = nama.length();
-	firstName = nama.substring(0, i-1).trim();
+	if (i == 0) {
+        i = nama.length();
+    }
+	firstName = nama.substring(0, i - 1).trim();
 
 	log.info("Authenticated user via CAS: " + netid);
 	return netid;
@@ -431,11 +433,11 @@ public class CASAuthentication
     {
        // Determine CAS server URL
        final String authServer = configurationService.getProperty("authentication-cas.cas.server.url");
-       StringBuffer url=new StringBuffer(authServer);
+       StringBuffer url = new StringBuffer(authServer);
        url.append("?service=").append(request.getScheme()).
        append("://").append(request.getServerName());
        //Add the URL callback
-       if(request.getServerPort()!=80)
+       if (request.getServerPort() != 80) 
          url.append(":").append(request.getServerPort());
        url.append(request.getContextPath()).append("/cas-login");
        log.info("CAS server and service:  " + authServer);
@@ -492,26 +494,26 @@ public class CASAuthentication
     
         public void startElement(String ns, String ln, String qn, Attributes a) {
           // clear the buffer
-          currentText = new StringBuffer();
+            currentText = new StringBuffer();
     
         }
     
         public void characters(char[] ch, int start, int length) {
           // store the body, in stages if necessary
-          currentText.append(ch, start, length);
+            currentText.append(ch, start, length);
         }
     
         public void endElement(String ns, String ln, String qn)
             throws SAXException {
           
-		if(qn.equals(LDAP_CN)) {
-	    		CASAuthentication.this.namaLdap = currentText.toString();
-		} else if (qn.equals(KD_ORG)) {
-	   		CASAuthentication.this.kdOrg.add( currentText.toString() );
-			if( currentText.toString().endsWith("00.01.01") )
-				CASAuthentication.this.isFK = true;
-		}
-    
+            if (qn.equals(LDAP_CN)) {
+                    CASAuthentication.this.namaLdap = currentText.toString();
+            } else if (qn.equals(KD_ORG)) {
+                CASAuthentication.this.kdOrg.add(currentText.toString());
+                if (currentText.toString().endsWith("00.01.01"))
+                    CASAuthentication.this.isFK = true;
+            }
+        
         }
     
      }

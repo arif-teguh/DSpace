@@ -8,13 +8,9 @@
 package org.dspace.authenticate;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,19 +29,9 @@ import org.dspace.eperson.factory.EPersonServiceFactory;
 
 // we use the Java CAS client
 import edu.yale.its.tp.cas.client.*;
-
-
-// import org.jasig.cas.client.validation.Assertion;
-// import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
-
-// CAS XML Response Parsing
-import javax.xml.parsers.ParserConfigurationException; 
-import javax.xml.parsers.SAXParserFactory; 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
+import java.util.ArrayList;
+import org.jasig.cas.client.validation.Assertion;
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 
 /**
  * Authenticator for Central Authentication Service (CAS).
@@ -59,12 +45,11 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Tomasz Baria Boiński, Gdańsk University of Technology
  * CAS authentication has been adapted to DSpace 4.2 and integrated with SAML user query
  * @version $Revision 1.2 $
- * @author Muhammad Aji Muharrom, Universitas Indonesia
- * Customized version of CAS Authentication for SSO-UI. Enhanced with XML parsing for getting user attributes.
- * @version $Revision 1.3 $
  */
 
-public class CASAuthentication implements AuthenticationMethod {
+public class CASAuthentication
+    implements AuthenticationMethod {
+
     /** log4j category */
     private static Logger log = Logger.getLogger(CASAuthentication.class);
 
@@ -74,10 +59,6 @@ public class CASAuthentication implements AuthenticationMethod {
     private String firstName = "University";
     private String lastName = "User";
     private String email = null;
-
-    protected Boolean isFK = false;
-    protected List<String> kdOrg = new ArrayList<String>();
-    protected String namaLdap;
 
     private Map attributes = null;
 
@@ -133,28 +114,10 @@ public class CASAuthentication implements AuthenticationMethod {
     }
 
     /**
-     * Assign special group.
+     * No special groups.
      */
-    public List<Group> getSpecialGroups(Context context, HttpServletRequest request) {
-	    try {
-            if (context.getCurrentUser() != null) {
-                String groupName = configurationService.getProperty("authentication-cas.login.specialgroup", null);
-                if ((groupName != null) && (!groupName.trim().equals(""))) {
-                    Group specialGroup = EPersonServiceFactory.getInstance().getGroupService().findByName(context, groupName);
-                    if (specialGroup == null) {
-                        // Oops - the group isn't there.
-                        log.warn(LogManager.getHeader(context,
-                                "cas_specialgroup",
-                                "Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
-                        return new ArrayList();
-                    } else {
-                        return Arrays.asList(specialGroup);
-                    }
-                }
-		    }
-	    } catch (Exception e) {
-		    log.error(LogManager.getHeader(context,"getSpecialGroups",""),e);
-	    }
+    public List<Group> getSpecialGroups(Context context, HttpServletRequest request)
+    {
 	    return new ArrayList();
     }
 
@@ -164,53 +127,66 @@ public class CASAuthentication implements AuthenticationMethod {
      *
      * @return One of: SUCCESS, BAD_CREDENTIALS, NO_SUCH_USER, BAD_ARGS
      */
-    public int authenticate(Context context, String netid, String password, String realm, HttpServletRequest request) throws SQLException {
+    public int authenticate(Context context,
+                            String netid,
+                            String password,
+                            String realm,
+                            HttpServletRequest request)
+        throws SQLException
+    {
         final String ticket = request.getParameter("ticket");
         final String service = request.getRequestURL().toString();
         log.info(LogManager.getHeader(context, "login", " ticket= " + ticket));
         log.info(LogManager.getHeader(context, "login", "service= " + service));
-        log.info("masuk method authenticate");
-        if (ticket != null) {
-            log.info("masuk if terluar");
-            try {
+
+        if (ticket != null)
+        {
+            try
+            {
                 // Determine CAS validation URL
                 String validate = configurationService.getProperty("authentication-cas.cas.validate.url", null);
                 log.info(LogManager.getHeader(context, "login", "CAS ticket: " + ticket));
                 log.info(LogManager.getHeader(context, "login", "CAS service: " + service));
-                if (validate == null) {
+                if (validate == null)
+                {
                     throw new ServletException("No CAS validation URL specified. You need to set property 'cas.validate.url'");
                 }
 
                 // Validate ticket (it is assumed that CAS validator returns the user network ID)
                 netid = validate(service, ticket, validate);
-                if (netid == null) {
-                    log.info("masuk netid == null");
-                    
+                if (netid == null)
+                {
                     throw new ServletException("Ticket '" + ticket + "' is not valid");
                 }
 
                 // Locate the eperson in DSpace
                 EPerson eperson = null;
-                try {
+                try
+                {
                     eperson = EPersonServiceFactory.getInstance().getEPersonService().findByNetid(context, netid.toLowerCase());
-                } catch (SQLException e) {
+                }
+                catch (SQLException e)
+                {
                   log.error("cas findbynetid failed");
                   log.error(e.getStackTrace());
                 }
 
                 // if they entered a netd that matches an eperson and they are allowed to login
-                if (eperson != null) {
+                if (eperson != null)
+                {
                   // e-mail address corresponds to active account
-                    if (eperson.getRequireCertificate()) {
+                    if (eperson.getRequireCertificate())
+                    {
                         // they must use a certificate
                         return CERT_REQUIRED;
-                    } else if (!eperson.canLogIn()) {
+                    }
+                    else if (!eperson.canLogIn()) {
                         return BAD_ARGS;
                     }
 
                     // Logged in OK.
                     HttpSession session = request.getSession(false);
-                    if (session != null) {
+                    if (session!=null) {
                       session.setAttribute("loginType", "CAS");
                     }
 
@@ -218,15 +194,19 @@ public class CASAuthentication implements AuthenticationMethod {
                     log.info(LogManager.getHeader(context, "authenticate", "type=CAS"));
 
                     return SUCCESS;
-                } else {
+                }
+
                 // the user does not exist in DSpace so create an eperson
-                    if (canSelfRegister(context, request, netid)) {
+                else
+                {
+                  if (canSelfRegister(context, request, netid) )
+                    {
                         //org.jasig.cas.client.validation.Saml11TicketValidationFilter filter;
                         // TEMPORARILY turn off authorisation
                         // Register the new user automatically
                         //context.setIgnoreAuthorization(true);
                         context.turnOffAuthorisationSystem();
-                        
+
                         eperson = EPersonServiceFactory.getInstance().getEPersonService().create(context);
                         // use netid only but this implies that user has to manually update their profile
                         eperson.setNetid(netid);
@@ -240,15 +220,10 @@ public class CASAuthentication implements AuthenticationMethod {
                         eperson.setFirstName(context, firstName);
                         eperson.setLastName(context, lastName);
 
-                        String mailSuffix = configurationService.getProperty("authentication-cas.login.mailsuffix", null);
-                        if (mailSuffix != null) {
-                            email = netid + "@" +mailSuffix;
-                        }
-                        
                         if (email == null) {
                             email = netid;
                         }
-                        
+
                         String lang = configurationService.getProperty("default.locale");
                         eperson.setLanguage(context, lang);
                         eperson.setEmail(email);
@@ -257,7 +232,7 @@ public class CASAuthentication implements AuthenticationMethod {
 
                         eperson.setCanLogIn(true);
                         AuthenticateServiceFactory.getInstance().getAuthenticationService().initEPerson(context, request, eperson);
-                        // EPersonServiceFactory.getInstance().getEPersonService().update(); // eperson.update(); // this line is called from i don't know where so the data is updated
+                        // eperson.update();
                         context.commit();
                         //context.setIgnoreAuthorization(false);
                         context.restoreAuthSystemState();
@@ -265,7 +240,9 @@ public class CASAuthentication implements AuthenticationMethod {
                         log.warn(LogManager.getHeader(context, "authenticate",
                             netid + "  type=CAS auto-register"));
                         return SUCCESS;
-                    } else {
+                    }
+                    else
+                    {
                         // No auto-registration for valid netid
                         log.warn(LogManager.getHeader(context, "authenticate",
                             netid + "  type=netid_but_no_record, cannot auto-register"));
@@ -273,7 +250,8 @@ public class CASAuthentication implements AuthenticationMethod {
                     }
                 }
 
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 log.error(e.getStackTrace()[0]);
                 //throw new ServletException(e);
             }
@@ -282,106 +260,59 @@ public class CASAuthentication implements AuthenticationMethod {
     }
 
 
-    /**
-     * Returns the NetID of the owner of the given ticket, or null if the
-     * ticket isn't valid.
-     *
-     * @param service the service ID for the application validating the
-     *                ticket
-     * @param ticket  the opaque service ticket (ST) to validate
-     * 
-     * @param validateURL the validation service URL
-     * 
-     * @return netid of eperson
-     * 
-     * @throws java.io.IOException
-     * 
-     * @throws javax.servlet.ServletException
-     */
-    public String validate(String service, String ticket, String validateURL) throws 
-    IOException, ServletException, ParserConfigurationException, SAXException {
+  /**
+   * Returns the NetID of the owner of the given ticket, or null if the
+   * ticket isn't valid.
+   *
+   * @param service the service ID for the application validating the
+   *                ticket
+   * @param ticket  the opaque service ticket (ST) to validate
+   * 
+   * @param validateURL the validation service URL
+   * 
+   * @return netid of eperson
+   * 
+   * @throws java.io.IOException
+   * 
+   * @throws javax.servlet.ServletException
+   */
+  public String validate(String service, String ticket, String validateURL)
+      throws IOException, ServletException
+  {
+	String netid = null;
+	firstName = "University";
+	lastName = "User";
+	email = null;
 
-        log.info("masuk method validate");
-        //log.info(ticket);
-        String netid = null;
-        firstName = "University";
-        lastName = "User";
-        email = null;
+	ServiceTicketValidator stv = null;
+	String validateUrl = null;
 
-        ServiceTicketValidator stv = null;
-        String validateUrl = null;
+	if (ticket.startsWith("ST")) {
+	stv = new ServiceTicketValidator();
+	} else {
+	// uPortal uses this
+	stv = new ProxyTicketValidator();
+	validateUrl = casProxyvalidate;
+	}
 
-        if (ticket.startsWith("ST")) {
-            stv = new ServiceTicketValidator();
-        } else {
-            // uPortal uses this
-            stv = new ProxyTicketValidator();
-            validateUrl = casProxyvalidate;
-        }
+	stv.setCasValidateUrl(validateURL);
+	stv.setService(java.net.URLEncoder.encode(service));
+	stv.setServiceTicket(ticket);
 
-        stv.setCasValidateUrl(validateURL);
-        stv.setService(java.net.URLEncoder.encode(service));
-        stv.setServiceTicket(ticket);
+	try {
+		stv.validate();
+	} catch (Exception e) {
+		log.error("Unexpected exception caught", e);
+		throw new ServletException(e);
+	}
 
-        try {
-            stv.validate();
-        } catch (Exception e) {
-            log.error("Unexpected exception caught", e);
-            throw new ServletException(e);
-        }
-
-        if (!stv.isAuthenticationSuccesful()) {
-            return null;
-        }
-        
-        // We will receive XML Response as such
-        // <cas:serviceResponse>
-        // 	<cas:authenticationSuccess>
-        // 		<cas:user>...</cas:user>
-        // 		<cas:attributes>
-        // 			<cas:ldap_cn>{NAME IN CAPITAL}</cas:ldap_cn>
-        // 			<cas:kd_org>{XX.00.01.01 if FK}</cas:kd_org>
-        // 			<cas:kd_org>{AA.BB.CC.DD}</cas:kd_org>
-        // 			<cas:nama>{nama role 1}#{nama role 2}</cas:nama>
-        // 			<cas:peran_user>mahasiswa</cas:peran_user>
-        // 			<cas:npm>NPM1#NPM2</cas:npm>
-        // 		</cas:attributes>
-        // 	</cas:authenticationSuccess>
-        // </cas:serviceResponse>
-        // Parse XML based on legacy code archived in : http://www.javased.com/index.php?source_dir=nuxeo-platform-login/nuxeo-platform-login-cas2/src/main/java/edu/yale/its/tp/cas/client/ServiceTicketValidator.java
-        String xmlResponse = stv.getResponse();
-
-        System.out.println(xmlResponse);
-        //log.info("[COBA] XML RESPONSE: " + xmlResponse);
-
-        
-        parse(xmlResponse);
-
-        if (!this.isFK) {
-            // TODO add error message "unauthorized access"
-            return null;
-        }
-
-        netid = stv.getUser();
-
-        // name parsing
-        String nama = namaLdap.trim();
-        int i = nama.length() - 1; 
-        while (i >= 0 && nama.charAt(i) != ' ') {
-            --i; 
-            if (i != 0) {
-                ++i;
-            }
-        } 
-        lastName = nama.substring(i);
-
-        if (i == 0) {
-            i = nama.length();
-        }
-        firstName = nama.substring(0, i - 1).trim();
-
-        log.info("Authenticated user via CAS: " + netid);
-        return netid;
+	if (!stv.isAuthenticationSuccesful()) {
+		return null;
+	}
+	netid = stv.getUser();
+//	attributes = stv.getAttributes();
+	log.info("Authenticated user via CAS: " + netid);
+	return netid;
   }
 
 
@@ -391,12 +322,14 @@ public class CASAuthentication implements AuthenticationMethod {
     * from LDAP or database etc
     */
 
-    public void registerUser(String netid) throws ClassNotFoundException, SQLException {
-               // add your code here
+   public void registerUser(String netid)
+                          throws ClassNotFoundException, SQLException
+    {
+                // add your code here
     }
 
 
-    /** 
+    /*
      * Returns URL to which to redirect to obtain credentials (either password
      * prompt or e.g. HTTPS port for client cert.); null means no redirect.
      *
@@ -411,24 +344,24 @@ public class CASAuthentication implements AuthenticationMethod {
      *
      * @return fully-qualified URL
      */
-    public String loginPageURL(Context context,HttpServletRequest request, HttpServletResponse response) {
-        // Determine CAS server URL
-        log.info("masuk method loginPageURL");
-        final String authServer = configurationService.getProperty("authentication-cas.cas.server.url");
-        StringBuffer url = new StringBuffer(authServer);
-        url.append("?service=").append(request.getScheme()).
-        append("://").append(request.getServerName());
-        //Add the URL callback
-        if (request.getServerPort() != 80) {
-            url.append(":").append(request.getServerPort());
-        }
-            
-        url.append(request.getContextPath()).append("/cas-login");
-        log.info("CAS server and service:  " + authServer);
-        //System.out.println(url);
-        
-        // Redirect to CAS server
-        return response.encodeRedirectURL(url.toString());
+    public String loginPageURL(Context context,
+                            HttpServletRequest request,
+                            HttpServletResponse response)
+    {
+       // Determine CAS server URL
+       final String authServer = configurationService.getProperty("authentication-cas.cas.server.url");
+       StringBuffer url=new StringBuffer(authServer);
+       url.append("?service=").append(request.getScheme()).
+       append("://").append(request.getServerName());
+       //Add the URL callback
+       if(request.getServerPort()!=80)
+         url.append(":").append(request.getServerPort());
+       url.append(request.getContextPath()).append("/cas-login");
+       log.info("CAS server and service:  " + authServer);
+       //System.out.println(url);
+
+       // Redirect to CAS server
+       return response.encodeRedirectURL(url.toString());
     }
 
     /*
@@ -440,62 +373,10 @@ public class CASAuthentication implements AuthenticationMethod {
      *
      * @return Message key to look up in i18n message catalog.
      */
-    public String loginPageTitle(Context context) {
+    public String loginPageTitle(Context context)
+    {
         //return null;
         return "org.dspace.eperson.CASAuthentication.title";
     }
-
-    private void parse(String response) throws ParserConfigurationException, SAXException, IOException {
-        log.info("masuk method parse");
-        XMLReader r =  SAXParserFactory.newInstance().newSAXParser().getXMLReader(); 
-        r.setFeature("http://xml.org/sax/features/namespaces", false); 
-        r.setContentHandler(newHandler()); 
-        r.parse(new InputSource(new StringReader(response)));
-    }
-
-    protected DefaultHandler newHandler() { return new Handler(); }
-
-    protected class Handler extends DefaultHandler {
-    
-        //**********************************************
-        // Constants
-    
-        protected static final String USER = "cas:user";
-        protected static final String LDAP_CN = "cas:ldap_cn";
-        protected static final String KD_ORG = "cas:kd_org";
-        protected static final String NAMA = "cas:nama"; 
-    
-        //**********************************************
-        // Parsing state
-    
-        protected StringBuffer currentText = new StringBuffer();
-        protected String netid, pgtIou, errorCode, errorMessage;
-    
-    
-        //**********************************************
-        // Parsing logic
-        public void startElement(String ns, String ln, String qn, Attributes a) {
-             // clear the buffer
-            currentText = new StringBuffer();
-    
-        }
-    
-        public void characters(char[] ch, int start, int length) {
-            // store the body, in stages if necessary
-            currentText.append(ch, start, length);
-        }
-    
-        public void endElement(String ns, String ln, String qn) throws SAXException {
-            if (qn.equals(LDAP_CN)) {
-                    CASAuthentication.this.namaLdap = currentText.toString();
-            } else if (qn.equals(KD_ORG)) {
-                CASAuthentication.this.kdOrg.add(currentText.toString());
-                if (currentText.toString().endsWith("00.01.01"))
-                    CASAuthentication.this.isFK = true;
-            }
-        
-        }
-    
-     }
 
 }

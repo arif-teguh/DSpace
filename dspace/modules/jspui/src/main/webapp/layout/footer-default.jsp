@@ -41,6 +41,7 @@
 	    <footer>
 		  <div class="container">
 			<div class="col-lg-4">
+				
 				<img style="width:200px;" src="<%= request.getContextPath() %>/image/iknow-.jpg" /><br/>
 				<img height="80"  src="<%= request.getContextPath() %>/image/logo-ui-fk-imeri.png" alt="Logo" />
 			</div>
@@ -59,10 +60,30 @@
 				<div>
 					IMERI Management<br/>Education Tower IMERI building, 2nd floor<br/>
 					Jalan Salemba Raya no. 6<br/>Jakarta Pusat, DKI Jakarta, Indonesia<br/>+62 21 29189162
+					<br> Visitor : 
+						<!-- Default Statcounter code for iknow
+						http://152.118.76.18:8080/jspui -->
+						<script type="text/javascript">
+						var sc_project=12370303; 
+						var sc_invisible=0; 
+						var sc_security="dddfb22d"; 
+						var sc_https=1; 
+						var scJsHost = "https://";
+						document.write("<sc"+"ript type='text/javascript' src='" +
+						scJsHost+
+						"statcounter.com/counter/counter.js'></"+"script>");
+						</script>
+						<noscript><div class="statcounter"><a title="Web Analytics"
+						href="https://statcounter.com/" target="_blank"><img
+						class="statcounter"
+						src="https://c.statcounter.com/12370303/0/dddfb22d/0/"
+						alt="Web Analytics"></a></div></noscript>
+						<!-- End of Statcounter Code -->
+						<a href="https://statcounter.com/p12370303/?guest=1">View My
+						Stats</a>
 				</div>
 			</div>
-			<script type="text/javascript" src="https://www.stat-counter.org/count/63ws"></script><br>
- <a href='https://www.free-counters.org/'>free HitCounters</a> <script type='text/javascript' src='https://whomania.com/ctr?id=f46f8cc84cf7eddb63cc842a0646ab4a247bd789'></script>
+			
 		  </div>
              <div class="navbar navbar-inverse navbar-bottom">
              <div id="designedby" class="container text-muted">

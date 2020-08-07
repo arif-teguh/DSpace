@@ -166,6 +166,7 @@ public class CASAuthentication implements AuthenticationMethod {
      */
     public int authenticate(Context context, String netid, String password, String realm, HttpServletRequest request) throws SQLException {
         final String ticket = request.getParameter("ticket");
+        //log.info(ticket);
         final String service = request.getRequestURL().toString();
         log.info(LogManager.getHeader(context, "login", " ticket= " + ticket));
         log.info(LogManager.getHeader(context, "login", "service= " + service));
@@ -174,6 +175,7 @@ public class CASAuthentication implements AuthenticationMethod {
             log.info("masuk if terluar");
             try {
                 // Determine CAS validation URL
+                log.info("masuk try if ticket != null");
                 String validate = configurationService.getProperty("authentication-cas.cas.validate.url", null);
                 log.info(LogManager.getHeader(context, "login", "CAS ticket: " + ticket));
                 log.info(LogManager.getHeader(context, "login", "CAS service: " + service));
@@ -194,8 +196,8 @@ public class CASAuthentication implements AuthenticationMethod {
                 try {
                     eperson = EPersonServiceFactory.getInstance().getEPersonService().findByNetid(context, netid.toLowerCase());
                 } catch (SQLException e) {
-                  log.error("cas findbynetid failed");
-                  log.error(e.getStackTrace());
+                    log.error("cas findbynetid failed");
+                    log.error(e.getStackTrace());
                 }
 
                 // if they entered a netd that matches an eperson and they are allowed to login
@@ -277,6 +279,8 @@ public class CASAuthentication implements AuthenticationMethod {
                 log.error(e.getStackTrace()[0]);
                 //throw new ServletException(e);
             }
+        } else {
+            log.info("masuk ticket == null");
         }
         return BAD_ARGS;
     }

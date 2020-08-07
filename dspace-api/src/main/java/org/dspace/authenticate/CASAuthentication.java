@@ -326,8 +326,10 @@ public class CASAuthentication implements AuthenticationMethod {
         String validateUrl = null;
 
         if (ticket.startsWith("ST")) {
+            log.info("masuk if ticket startswith st");
             stv = new ServiceTicketValidator();
         } else {
+            log.info("masuk if ticket startswith st == false");
             // uPortal uses this
             stv = new ProxyTicketValidator();
             validateUrl = casProxyvalidate;
@@ -338,6 +340,8 @@ public class CASAuthentication implements AuthenticationMethod {
         stv.setServiceTicket(ticket);
 
         try {
+            log.info("masuk if try stv.validate()");
+
             stv.validate();
         } catch (Exception e) {
             log.error("Unexpected exception caught", e);
@@ -345,6 +349,8 @@ public class CASAuthentication implements AuthenticationMethod {
         }
 
         if (!stv.isAuthenticationSuccesful()) {
+            log.info("stv.isAuthenticationSuccesful() == false");
+
             return null;
         }
         
@@ -369,6 +375,7 @@ public class CASAuthentication implements AuthenticationMethod {
         log.info("[COBA] XML RESPONSE: " + xmlResponse);
 
         parse(xmlResponse);
+        log.info("lewat parse(xmlResponse)");
 
         /*
         if (!this.isFK) {
@@ -384,6 +391,8 @@ public class CASAuthentication implements AuthenticationMethod {
         String nama = namaLdap.trim();
         int i = nama.length() - 1; 
         while (i >= 0 && nama.charAt(i) != ' ') {
+            log.info("masuk while i >= 0 ");
+
             --i; 
             if (i != 0) {
                 ++i;
@@ -506,8 +515,9 @@ public class CASAuthentication implements AuthenticationMethod {
                     CASAuthentication.this.namaLdap = currentText.toString();
             } else if (qn.equals(KD_ORG)) {
                 CASAuthentication.this.kdOrg.add(currentText.toString());
-                if (currentText.toString().endsWith("00.01.01"))
+                if (currentText.toString().endsWith("00.01.01")) {
                     CASAuthentication.this.isFK = true;
+                }
             }
         
         }

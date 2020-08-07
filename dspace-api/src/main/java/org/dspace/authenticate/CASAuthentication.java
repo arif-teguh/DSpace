@@ -166,13 +166,12 @@ public class CASAuthentication implements AuthenticationMethod {
      */
     public int authenticate(Context context, String netid, String password, String realm, HttpServletRequest request) throws SQLException {
         final String ticket = request.getParameter("ticket");
-        //log.info(ticket);
         final String service = request.getRequestURL().toString();
         log.info(LogManager.getHeader(context, "login", " ticket= " + ticket));
         log.info(LogManager.getHeader(context, "login", "service= " + service));
         log.info("masuk method authenticate");
         if (ticket != null) {
-            log.info("masuk if terluar");
+            log.info("masuk if ticket != null");
             try {
                 // Determine CAS validation URL
                 log.info("masuk try if ticket != null");
@@ -180,33 +179,40 @@ public class CASAuthentication implements AuthenticationMethod {
                 log.info(LogManager.getHeader(context, "login", "CAS ticket: " + ticket));
                 log.info(LogManager.getHeader(context, "login", "CAS service: " + service));
                 if (validate == null) {
+                    log.info("masuk if validate == null");
                     throw new ServletException("No CAS validation URL specified. You need to set property 'cas.validate.url'");
                 }
 
                 // Validate ticket (it is assumed that CAS validator returns the user network ID)
                 netid = validate(service, ticket, validate);
+            
                 if (netid == null) {
                     log.info("masuk netid == null");
                     
-                    throw new ServletException("Ticket '" + ticket + "' is not valid");
+                    throw new ServletException("Ticket is not valid");
                 }
 
                 // Locate the eperson in DSpace
                 EPerson eperson = null;
                 try {
+                    log.info("masuk eperson = epersonservicefactory.getinstance()......");
                     eperson = EPersonServiceFactory.getInstance().getEPersonService().findByNetid(context, netid.toLowerCase());
                 } catch (SQLException e) {
+                    log.info("masuk catch (SQLException e)");
                     log.error("cas findbynetid failed");
                     log.error(e.getStackTrace());
                 }
 
                 // if they entered a netd that matches an eperson and they are allowed to login
                 if (eperson != null) {
+                    log.info("masuk if eperson != null");
                   // e-mail address corresponds to active account
                     if (eperson.getRequireCertificate()) {
                         // they must use a certificate
+                        log.info("masuk if eperson.getRequireCertificate() ");
                         return CERT_REQUIRED;
                     } else if (!eperson.canLogIn()) {
+                        log.info("masuk else if (!eperson.canLogIn()) ");
                         return BAD_ARGS;
                     }
 
@@ -223,6 +229,7 @@ public class CASAuthentication implements AuthenticationMethod {
                 } else {
                 // the user does not exist in DSpace so create an eperson
                     if (canSelfRegister(context, request, netid)) {
+                        log.info("masuk if (canSelfRegister(context, request, netid))");
                         //org.jasig.cas.client.validation.Saml11TicketValidationFilter filter;
                         // TEMPORARILY turn off authorisation
                         // Register the new user automatically
@@ -244,10 +251,12 @@ public class CASAuthentication implements AuthenticationMethod {
 
                         String mailSuffix = configurationService.getProperty("authentication-cas.login.mailsuffix", null);
                         if (mailSuffix != null) {
+                            log.info("masuk if (mailSuffix!=null)");
                             email = netid + "@" +mailSuffix;
                         }
                         
                         if (email == null) {
+                            log.info("masuk if (email==null)");
                             email = netid;
                         }
                         
@@ -268,6 +277,7 @@ public class CASAuthentication implements AuthenticationMethod {
                             netid + "  type=CAS auto-register"));
                         return SUCCESS;
                     } else {
+                        log.info("masuk else (line 278) return NO_SUCH_USER");
                         // No auto-registration for valid netid
                         log.warn(LogManager.getHeader(context, "authenticate",
                             netid + "  type=netid_but_no_record, cannot auto-register"));
@@ -355,16 +365,18 @@ public class CASAuthentication implements AuthenticationMethod {
         // Parse XML based on legacy code archived in : http://www.javased.com/index.php?source_dir=nuxeo-platform-login/nuxeo-platform-login-cas2/src/main/java/edu/yale/its/tp/cas/client/ServiceTicketValidator.java
         String xmlResponse = stv.getResponse();
 
-        System.out.println(xmlResponse);
-        //log.info("[COBA] XML RESPONSE: " + xmlResponse);
-
         
+        log.info("[COBA] XML RESPONSE: " + xmlResponse);
+
         parse(xmlResponse);
 
+        /*
         if (!this.isFK) {
             // TODO add error message "unauthorized access"
+            log.info("masuk this.isFK == false");
             return null;
         }
+        */
 
         netid = stv.getUser();
 

@@ -62,7 +62,8 @@ public class CASServlet extends DSpaceServlet
             HttpServletResponse response) throws ServletException, IOException,
             SQLException, AuthorizeException
     {
-	log.info(LogManager.getHeader(context, "do Post - ", request.getParameter("ticket")));
+        log.info("[CASServlet] masuk doDSPost");
+        log.info(LogManager.getHeader(context, "do Post - ", request.getParameter("ticket")));
         // Process the POSTed email and password
         String email = request.getParameter("login_email");
         String password = request.getParameter("login_password");
@@ -96,6 +97,7 @@ public class CASServlet extends DSpaceServlet
         }
         else
         {
+            log.info("[CASServlet] masuk else incorrect.jsp");
             jsp = "/login/incorrect.jsp";
         }
 

@@ -392,17 +392,20 @@ public class CASAuthentication implements AuthenticationMethod {
         int i = nama.length() - 1; 
         while (i >= 0 && nama.charAt(i) != ' ') {
             log.info("masuk while i >= 0 ");
-
             --i; 
-            if (i != 0) {
-                ++i;
-            }
         } 
-        lastName = nama.substring(i);
-
         if (i == 0) {
+            log.info("masuk if i == 0");
             i = nama.length();
         }
+
+        lastName = nama.substring(i);
+
+        if (i != 0) {
+            log.info("masuk if i != 0");
+            ++i;
+        }
+
         firstName = nama.substring(0, i - 1).trim();
 
         log.info("Authenticated user via CAS: " + netid);
@@ -473,9 +476,13 @@ public class CASAuthentication implements AuthenticationMethod {
     private void parse(String response) throws ParserConfigurationException, SAXException, IOException {
         log.info("masuk method parse");
         XMLReader r =  SAXParserFactory.newInstance().newSAXParser().getXMLReader(); 
+        log.info("lewat XMLReader r =");
         r.setFeature("http://xml.org/sax/features/namespaces", false); 
+        log.info("lewat r.setFeature(, false)");
         r.setContentHandler(newHandler()); 
+        log.info("lewat r.setcontenthandler()");
         r.parse(new InputSource(new StringReader(response)));
+        log.info("lewat r.parse(new inputsource(new stringreader))");
     }
 
     protected DefaultHandler newHandler() { return new Handler(); }

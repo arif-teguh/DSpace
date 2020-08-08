@@ -1,0 +1,5 @@
+1. mvn package di /home/dlkc/operfkui/src 
+2. ant update di /home/dlkc/operfkui/src/dspace/target/dspace-installer
+3. sudo cp -R dspace/webapps/* /opt/tomcat/latest/webapps/
+4. ./shutdown.sh di /opt/tomcat/latest/bin 
+6. ./startup.sh di /opt/tomcat/latest/bin

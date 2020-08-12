@@ -32,8 +32,16 @@
   -
   -   admin_button     - If the user is an admin
   --%>
+  
 
-<%@page import="org.dspace.core.Utils"%>
+<%@ page import="java.util.Locale"%>
+
+<%@ page import="org.dspace.core.I18nUtil" %>
+<%@ page import="org.dspace.app.webui.util.UIUtil" %>
+<%@ page import="org.dspace.eperson.EPerson" %>
+<%@ page import="org.dspace.eperson.service.EPersonService" %>
+<%@ page import="org.dspace.eperson.factory.EPersonServiceFactory" %>
+<%@ page import="org.dspace.core.Utils" %>
 <%@page import="com.coverity.security.Escape"%>
 <%@page import="org.dspace.discovery.configuration.DiscoverySearchFilterFacet"%>
 <%@page import="org.dspace.app.webui.util.UIUtil"%>
@@ -115,6 +123,43 @@
     // Admin user or not
     Boolean admin_b = (Boolean)request.getAttribute("admin_button");
     boolean admin_button = (admin_b == null ? false : admin_b.booleanValue());
+	
+	
+	//data eperson
+	Locale[] supportedLocales = I18nUtil.getSupportedLocales();
+    EPerson epersonForm = (EPerson) request.getAttribute("eperson");
+
+    String lastName = "";
+    String firstName = "";
+    String phone = "";
+    String language = "";
+	String cluster = "";
+	String department = "";
+
+    if (epersonForm != null)
+    {
+        EPersonService epersonService = EPersonServiceFactory.getInstance().getEPersonService();
+
+        // Get non-null values
+        lastName = epersonForm.getLastName();
+        if (lastName == null) lastName = "Login terlebih dahulu";
+
+        firstName = epersonForm.getFirstName();
+        if (firstName == null) firstName = "Login terlebih dahulu";
+
+        phone = epersonService.getMetadata(epersonForm, "phone");
+        if (phone == null) phone = "Login terlebih dahulu";
+
+        language = epersonService.getMetadata(epersonForm, "language");
+        if (language == null) language = "Login terlebih dahulu";
+		
+		department = epersonForm.getDepartment();
+        if (department == null) department = "Login terlebih dahulu";
+		
+		cluster = epersonForm.getCluster();
+        if (cluster == null) cluster = "Login terlebih dahulu";
+    }
+	
 %>
 
 <c:set var="dspace.layout.head.last" scope="request">
@@ -171,9 +216,10 @@
 
 
 	function printDiv(divName) {
+	 
      var printContents = document.getElementById(divName).innerHTML;
      var originalContents = document.body.innerHTML;
-
+		
      document.body.innerHTML = printContents;
 
      window.print();
@@ -562,6 +608,11 @@ else if( qResults != null)
 	</ul>
 <!-- give a content to the div -->
 </div>
+<div id = "print-area">
+Name : <%= Utils.addEntities(firstName)%> <%= Utils.addEntities(lastName)%>
+</br>Department : <%= Utils.addEntities(department)%>
+</br>Cluster : <%= Utils.addEntities(cluster)%>
+
 <div id = "print-area" class="discovery-result-results">
 <% if (communities.size() > 0 ) { %>
     <div class="panel panel-info">
@@ -583,6 +634,7 @@ else if( qResults != null)
     <dspace:itemlist items="<%= items %>" authorLimit="<%= etAl %>" />
     </div>
 <% } %>
+</div>
 </div>
 <%-- if the result page is enought long... --%>
 <% if ((communities.size() + collections.size() + items.size()) > 10) {%>

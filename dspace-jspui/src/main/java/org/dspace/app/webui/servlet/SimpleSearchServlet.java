@@ -23,6 +23,16 @@ import org.dspace.core.Context;
 import org.dspace.core.PluginConfigurationError;
 import org.dspace.core.factory.CoreServiceFactory;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.dspace.app.webui.util.JSPManager; 
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.core.Context;
+import org.dspace.core.LogManager;
+import org.dspace.eperson.EPerson;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.EPersonService;
+
 /**
  * Servlet for handling a simple search.
  * 
@@ -57,7 +67,8 @@ public class SimpleSearchServlet extends DSpaceServlet
     protected void doDSGet(Context context, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException,
             SQLException, AuthorizeException
-    {
+    {   
+        request.setAttribute("eperson", context.getCurrentUser());
         try
         {
             internalLogic.doSimpleSearch(context, request, response);

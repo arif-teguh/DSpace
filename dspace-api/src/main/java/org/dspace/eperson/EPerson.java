@@ -264,6 +264,41 @@ public class EPerson extends DSpaceObject implements DSpaceObjectLegacySupport
         setModified();
     }
 
+
+    public String getDepartment()
+    {
+        return getePersonService().getMetadataFirstValue(this, "eperson", "department", null, Item.ANY);
+    }
+
+    /**
+     * Set the eperson's first name
+     * 
+     * @param Department
+     *            the person's first name
+     */
+    public void setDepartment(Context context, String department) throws SQLException {
+        getePersonService().setMetadataSingleValue(context, this, "eperson", "department", null, null, department);
+        setModified();
+    }
+
+
+    public String getCluster()
+    {
+        return getePersonService().getMetadataFirstValue(this, "eperson", "cluster", null, Item.ANY);
+    }
+
+    /**
+     * Set the eperson's first name
+     * 
+     * @param faculty
+     *            the person's first name
+     */
+    public void setCluster(Context context, String cluster) throws SQLException {
+        getePersonService().setMetadataSingleValue(context, this, "eperson", "cluster", null, null, cluster);
+        setModified();
+    }
+
+
     /**
      * Get the eperson's last name.
      * 

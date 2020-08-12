@@ -133,12 +133,16 @@ public class EditProfileServlet extends DSpaceServlet
         String firstName = request.getParameter("first_name");
         String phone = request.getParameter("phone");
         String language = request.getParameter("language");
+        String department = request.getParameter("department");
+        String cluster = request.getParameter("cluster");
 
         // Update the eperson
         eperson.setFirstName(context, firstName);
         eperson.setLastName(context, lastName);
         personService.setMetadataSingleValue(context, eperson, "eperson" , "phone", null, null, phone);
         eperson.setLanguage(context, language);
+        eperson.setDepartment(context , department);
+        eperson.setCluster(context , cluster);
 
         // Check all required fields are there
         return (!StringUtils.isEmpty(lastName) && !StringUtils.isEmpty(firstName));

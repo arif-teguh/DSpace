@@ -41,6 +41,8 @@
     String firstName = "";
     String phone = "";
     String language = "";
+	String cluster = "";
+	String department = "";
 
     if (epersonForm != null)
     {
@@ -58,6 +60,12 @@
 
         language = epersonService.getMetadata(epersonForm, "language");
         if (language == null) language = "";
+		
+		department = epersonForm.getDepartment();
+        if (department == null) department = "";
+		
+		cluster = epersonForm.getCluster();
+        if (cluster == null) cluster = "";
     }
 %>
 	<div class="form-group">
@@ -100,3 +108,74 @@
         </select>
         </div>
      </div>
+
+     <div class="form-group">
+		<label class="col-md-offset-3 col-md-2 control-label" for="tdepartment">Department :</label>
+        <div class="col-md-3">
+		<select class="form-control" name="department" id="tdepartment">
+		<option value="<%= Utils.addEntities(department) %>"> <%= Utils.addEntities(department) %> </option>
+		<option value = "Department of Anatomy">Department of Anatomy</option>
+		<option value = "Department of Biochemistry & Molecular Biology">Department of Biochemistry & Molecular Biology</option>
+		<option value = "Department of Medical Biology">Department of Medical Biology</option>
+		<option value = "Department of Physiology">Department of Physiology</option>
+		<option value = "Department of Pharmacy">Department of Pharmacy</option>
+		<option value = "Department of Pharmacology & Therapeutic">Department of Pharmacology & Therapeutic</option>
+		<option value = "Department of Medical Education">Department of Medical Education</option>
+		<option value = "Department of Medical Physics">Department of Medical Physics</option>
+		<option value = "Department of Community Medicine">Department of Community Medicine</option>
+		<option value = "Department of Histology">Department of Histology</option>
+		<option value = "Department of Medical Chemistry">Department of Medical Chemistry</option>
+		<option value = "Department of Microbiology Clinic">Department of Microbiology Clinic</option>
+		<option value = "Department of Parastiology">Department Parastiology </option>
+		<option value = "Department of Anesthesiology">Department of Anesthesiology</option>
+		<option value = "Department of Surgery">Department of Surgery</option>
+		<option value = "Department of Neurology">Department of Neurology</option>
+		<option value = "Department of Neurosurgery">Department of Neurosurgery</option>
+		<option value = "Department of Psychiatry">Department of Psychiatry</option>
+		<option value = "Department of Dentistry">Department of Dentistry</option>
+		<option value = "Department of Pediatric">Department of Pediatric</option>
+		<option value = "Department of Forensic and Medicolegal">Department of Forensic and Medicolegal</option>
+		<option value = "Department of Dermatology and Venereology">Department of Dermatology and Venereology</option>
+		<option value = "Department Ear, Nose and Throat">Department Ear, Nose and Throat</option>
+		<option value = "Department of Radiology">Department of Radiology</option>
+		<option value = "Department of Pulmonology and Respiratory Medicine">Department of Pulmonology and Respiratory Medicine</option>
+		<option value = "Department of Clinical Pathology">Department of Clinical Pathology</option>
+		<option value = "Department of Obstetrics and Gynecology">Department of Obstetrics and Gynecology</option>
+		<option value = "Department of Cardiology and Vascular Medicine">Department of Cardiology and Vascular Medicine</option>
+		<option value = "Department of Ophthalmology">Department of Ophthalmology</option>
+		<option value = "Department of Internal Medicine">Department of Internal Medicine</option>
+		</select>
+		</div>
+    </div>
+
+    <div class="form-group">
+		<label class="col-md-offset-3 col-md-2 control-label" for="tcluster">cluster :</label>
+        <div class="col-md-3">
+		<select class="form-control" type="text" name="cluster" id="tcluster">
+		<option value="<%= Utils.addEntities(cluster)%>"><%= Utils.addEntities(cluster)%></option>
+		<option value="Center of e-Learning">Center of e-Learning</option>
+		<option value="Indonesia Museum of Health and Medicine">Indonesia Museum of Health and Medicine</option>
+		<option value="Knowledge Management Center">Knowledge Management Center</option>
+		<option value="Medical Education Center">Medical Education Center</option>
+		<option value="Simulation Based Medical Education & Research Center">Simulation Based Medical Education & Research Center</option>
+		<option value="Drug Development">Drug Development</option>
+		<option value="Human Cancer">Human Cancer</option>
+		<option value="Human Genetics">Human Genetics</option>
+		<option value="Human Nutrition">Human Nutrition</option>
+		<option value="Human Reproduction, Fertility and Family Planning">Human Reproduction, Fertility and Family Planning</option>
+		<option value="Infectious Disease and Immunology">Infectious Disease and Immunology</option>
+		<option value="Metabolic Disorder, Carduivascular and Aging">Metabolic Disorder, Carduivascular and Aging</option>
+		<option value="Neuroscience and Brain Development">Neuroscience and Brain Development</option>
+		<option value="Occupational and Environmental Health">Occupational and Environmental Health</option>
+		<option value="Sport and Exercise Studies">Sport and Exercise Studies</option>
+		<option value="Stem Cells and Tissue Engineering">Stem Cells and Tissue Engineering</option>
+		<option value="Molecular Biology and Proteomics Core Facilities">Molecular Biology and Proteomics Core Facilities</option>
+		<option value="Animal Research Facilities">Animal Research Facilities</option>
+		<option value="Clinical Research Supporting Unit">Clinical Research Supporting Unit</option>
+		<option value="Bio-Informatica">Bio-Informatica</option>
+		<option value="Medical Technology">Medical Technology</option>
+		<option value="Writing Center">Writing Center</option>
+		</select>
+
+		</div>
+	</div>

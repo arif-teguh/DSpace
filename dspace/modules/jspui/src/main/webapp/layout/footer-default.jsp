@@ -60,7 +60,7 @@
 				<div>
 					IMERI Management<br/>Education Tower IMERI building, 2nd floor<br/>
 					Jalan Salemba Raya no. 6<br/>Jakarta Pusat, DKI Jakarta, Indonesia<br/>+62 21 29189162
-					<br> Visitor : 
+					<br> Today's page view : 
 						<!-- Default Statcounter code for iknow
 						http://152.118.76.18:8080/jspui -->
 						<script type="text/javascript">
@@ -79,8 +79,7 @@
 						src="https://c.statcounter.com/12370303/0/dddfb22d/0/"
 						alt="Web Analytics"></a></div></noscript>
 						<!-- End of Statcounter Code -->
-						<a href="https://statcounter.com/p12370303/?guest=1">View My
-						Stats</a>
+						<a href="https://statcounter.com/p12370303/?guest=1">View Graph</a>
 				</div>
 			</div>
 			

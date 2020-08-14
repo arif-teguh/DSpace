@@ -219,7 +219,7 @@ public class CASAuthentication implements AuthenticationMethod {
                     // Logged in OK.
                     HttpSession session = request.getSession(false);
                     if (session != null) {
-                      session.setAttribute("loginType", "CAS");
+                        session.setAttribute("loginType", "CAS");
                     }
 
                     context.setCurrentUser(eperson);
@@ -370,10 +370,7 @@ public class CASAuthentication implements AuthenticationMethod {
         // </cas:serviceResponse>
         // Parse XML based on legacy code archived in : http://www.javased.com/index.php?source_dir=nuxeo-platform-login/nuxeo-platform-login-cas2/src/main/java/edu/yale/its/tp/cas/client/ServiceTicketValidator.java
         String xmlResponse = stv.getResponse();
-
-        
-        log.info("[COBA] XML RESPONSE: " + xmlResponse);
-
+        // log.info("[COBA] XML RESPONSE: " + xmlResponse);
         parse(xmlResponse);
         log.info("lewat parse(xmlResponse)");
 
@@ -384,6 +381,7 @@ public class CASAuthentication implements AuthenticationMethod {
             return null;
         }
         */
+        
 
         netid = stv.getUser();
 

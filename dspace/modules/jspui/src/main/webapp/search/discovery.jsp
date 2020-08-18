@@ -31,6 +31,7 @@
   -   collections      - results, Collection[]
   -
   -   admin_button     - If the user is an admin
+  
   --%>
   
 
@@ -135,30 +136,36 @@
     String language = "";
 	String cluster = "";
 	String department = "";
-
+	
     if (epersonForm != null)
     {
         EPersonService epersonService = EPersonServiceFactory.getInstance().getEPersonService();
-
+		
         // Get non-null values
         lastName = epersonForm.getLastName();
-        if (lastName == null) lastName = "Login terlebih dahulu";
+		
+        if (lastName == null) lastName = "Isi data Pada lamaan edit profile";
 
         firstName = epersonForm.getFirstName();
-        if (firstName == null) firstName = "Login terlebih dahulu";
+        if (firstName == null) firstName = "Isi data Pada lamaan edit profile";
+		else firstName = "Name : " +firstName;
 
         phone = epersonService.getMetadata(epersonForm, "phone");
-        if (phone == null) phone = "Login terlebih dahulu";
+        if (phone == null) phone = "Isi data Pada lamaan edit profile";
+		else phone = "Phone : " + phone;
 
         language = epersonService.getMetadata(epersonForm, "language");
-        if (language == null) language = "Login terlebih dahulu";
+        if (language == null) language = "Isi data Pada lamaan edit profile";
 		
 		department = epersonForm.getDepartment();
-        if (department == null) department = "Login terlebih dahulu";
+        if (department == null) department = "Isi data Pada lamaan edit profile";
+		else department = "Department : " + department;
 		
 		cluster = epersonForm.getCluster();
-        if (cluster == null) cluster = "Login terlebih dahulu";
+        if (cluster == null) cluster = "Isi data Pada lamaan edit profile";
+		else cluster = "Cluster : " + cluster;
     }
+	
 	
 %>
 
@@ -170,6 +177,10 @@
 		  a[href]:after {
 			content: none !important;
 		  }
+		
+		}
+		#data{
+			display : none;
 		}
 		</style>
 <script type="text/javascript">
@@ -216,10 +227,26 @@
 
 
 	function printDiv(divName) {
-	 
-     var printContents = document.getElementById(divName).innerHTML;
-     var originalContents = document.body.innerHTML;
 		
+	 var originalContents = document.body.innerHTML;
+	 var cv = document.getElementById("data");
+	 cv.style.display = "block";
+     var printContents = document.getElementById(divName).innerHTML;
+     
+	 
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+	}
+
+	function printDiv2(divName) {
+		
+	 var originalContents = document.body.innerHTML;
+     var printContents = document.getElementById(divName).innerHTML;
+     
+	 
      document.body.innerHTML = printContents;
 
      window.print();
@@ -480,6 +507,12 @@
 %>
 </form>
 	<input class="btn btn-default" type="button" onclick="printDiv('print-area')" value="Print search result" />
+<%
+		if (!firstName.equals(""))
+    {
+		%><input class="btn btn-default" type="button" onclick="printDiv2('print-area')" value="Print without user info" /><%
+	}
+	%>
    </div>
 </div>   
 <% 
@@ -539,7 +572,7 @@ else if( qResults != null)
 
 %>
 <hr/>
-<div class="discovery-result-pagination row container">
+<div id ="test abc" class="discovery-result-pagination row container">
 <%
 	long lastHint = qResults.getStart()+qResults.getMaxResults() <= qResults.getTotalSearchResults()?
 	        qResults.getStart()+qResults.getMaxResults():qResults.getTotalSearchResults();
@@ -609,11 +642,16 @@ else if( qResults != null)
 <!-- give a content to the div -->
 </div>
 <div id = "print-area">
-Name : <%= Utils.addEntities(firstName)%> <%= Utils.addEntities(lastName)%>
-</br>Department : <%= Utils.addEntities(department)%>
-</br>Cluster : <%= Utils.addEntities(cluster)%>
 
-<div id = "print-area" class="discovery-result-results">
+
+<div id = 'data'>
+<%= Utils.addEntities(firstName)%> <%= Utils.addEntities(lastName)%>
+</br><%= Utils.addEntities(department)%>
+</br><%= Utils.addEntities(cluster)%>
+</div>
+
+
+<div class="discovery-result-results">
 <% if (communities.size() > 0 ) { %>
     <div class="panel panel-info">
     <div class="panel-heading"><fmt:message key="jsp.search.results.comhits"/></div>

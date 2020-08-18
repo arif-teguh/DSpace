@@ -182,6 +182,9 @@
 		#data{
 			display : none;
 		}
+		#bar{
+			width : 100%;
+		}
 		</style>
 <script type="text/javascript">
 	var jQ = jQuery.noConflict();
@@ -572,7 +575,7 @@ else if( qResults != null)
 
 %>
 <hr/>
-<div id ="test abc" class="discovery-result-pagination row container">
+<div id ="bar" class="discovery-result-pagination row container">
 <%
 	long lastHint = qResults.getStart()+qResults.getMaxResults() <= qResults.getTotalSearchResults()?
 	        qResults.getStart()+qResults.getMaxResults():qResults.getTotalSearchResults();

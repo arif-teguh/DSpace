@@ -1,11 +1,8 @@
 <%--
-
     The contents of this file are subject to the license and copyright
     detailed in the LICENSE and NOTICE files at the root of the source
     tree and available online at
-
     http://www.dspace.org/license/
-
 --%>
 <%--
   - Perform task page
@@ -31,7 +28,6 @@
 <%
     BasicWorkflowItem workflowItem =
         (BasicWorkflowItem) request.getAttribute("workflow.item");
-
     Collection collection = workflowItem.getCollection();
     Item item = workflowItem.getItem();
 %>
@@ -115,7 +111,6 @@
                     </div>
 <%
     }
-
     if (workflowItem.getState() == BasicWorkflowService.WFSTATE_STEP1 ||
         workflowItem.getState() == BasicWorkflowService.WFSTATE_STEP2)
     {
@@ -135,7 +130,6 @@
 	        		
 <%
     }
-
     if (workflowItem.getState() == BasicWorkflowService.WFSTATE_STEP2 ||
         workflowItem.getState() == BasicWorkflowService.WFSTATE_STEP3)
     {

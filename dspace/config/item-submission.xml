@@ -122,12 +122,7 @@
      </step>
 
 
-       <step id="duplicate-detection">
-         <heading>submit.progressbar.duplicate-detection</heading>
-         <processing-class>org.dspace.submit.step.DuplicateDetectionStep</processing-class>
-         <jspui-binding>org.dspace.app.webui.submit.step.JSPDuplicateDetectionStep</jspui-binding>
-         <workflow-editable>true</workflow-editable>
-     </step>
+       
  </step-definitions>
 
  <!-- The submission-definitions map lays out the detailed definition of   -->

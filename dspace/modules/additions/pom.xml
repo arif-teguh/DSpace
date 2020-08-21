@@ -73,12 +73,7 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>de.the-library-code.dspace</groupId>
-         <artifactId>addon-duplication-detection-service-api</artifactId>
-         <version>[6.3.0,6.4.0)</version>
-         <type>jar</type>
-      </dependency>
+      
 
    </dependencies>
 

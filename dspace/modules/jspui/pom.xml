@@ -86,11 +86,7 @@
                     </webResources>
                     <overlays>
                         <overlay />
-                        <overlay>
-                            <groupId>de.the-library-code.dspace</groupId>
-                            <artifactId>addon-duplication-detection-service-jspui</artifactId>
-                        <type>war</type>
-                        </overlay>
+                        
                         <overlay>
                             <groupId>org.dspace</groupId>
                             <artifactId>dspace-jspui</artifactId>

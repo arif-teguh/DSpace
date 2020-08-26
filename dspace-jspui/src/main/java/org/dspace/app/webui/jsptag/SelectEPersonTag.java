@@ -131,7 +131,7 @@ public class SelectEPersonTag extends TagSupport
             // add blank option value if no person selected to ensure that code is xhtml compliant 
             //out.print("<option/>");
             out.print("</select>");
-            out.print("<br/><div class=\"row container\">");
+            out.print("<br/><div id=\"bar1\" class=\"row container\">");
             String p = (multiple ? 
                             LocaleSupport.getLocalizedMessage(pageContext,
                                     "org.dspace.app.webui.jsptag.SelectEPersonTag.selectPeople")

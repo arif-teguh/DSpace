@@ -68,6 +68,17 @@
                parenttitlekey="jsp.administer"
                parentlink="<%= link %>"
                nocache="true">
+        
+
+<style>
+
+    #bar1{
+    width : 100%;
+    }
+    #bar2{
+    width : 100%;
+    }
+</style>
 
 	<h1><fmt:message key="jsp.tools.group-edit.title"/> : <%=Utils.addEntities(group.getName())%> (id: <%=group.getID()%>)
 	<dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, \"help.collection-admin\") +\"#groupeditor\"%>"><fmt:message key="jsp.help"/></dspace:popup>

@@ -144,8 +144,8 @@ public class CASAuthentication implements AuthenticationMethod {
                     if (specialGroup == null) {
                         // Oops - the group isn't there.
                         log.warn(LogManager.getHeader(context,
-                                "cas_specialgroup",
-                                "Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
+                            "cas_specialgroup",
+                            "Group defined in modules/authentication-cas.cfg login.specialgroup does not exist"));
                         return new ArrayList();
                     } else {
                         return Arrays.asList(specialGroup);
@@ -167,19 +167,19 @@ public class CASAuthentication implements AuthenticationMethod {
     public int authenticate(Context context, String netid, String password, String realm, HttpServletRequest request) throws SQLException {
         final String ticket = request.getParameter("ticket");
         final String service = request.getRequestURL().toString();
-        log.info(LogManager.getHeader(context, "login", " ticket= " + ticket));
-        log.info(LogManager.getHeader(context, "login", "service= " + service));
-        log.info("masuk method authenticate");
+        log.info(LogManager.getHeader(context, "login", " ticket = " + ticket));
+        log.info(LogManager.getHeader(context, "login", "service = " + service));
+        // log.info("masuk method authenticate");
         if (ticket != null) {
-            log.info("masuk if ticket != null");
+            // log.info("masuk if ticket != null");
             try {
                 // Determine CAS validation URL
-                log.info("masuk try if ticket != null");
+                // log.info("masuk try if ticket != null");
                 String validate = configurationService.getProperty("authentication-cas.cas.validate.url", null);
                 log.info(LogManager.getHeader(context, "login", "CAS ticket: " + ticket));
                 log.info(LogManager.getHeader(context, "login", "CAS service: " + service));
                 if (validate == null) {
-                    log.info("masuk if validate == null");
+                    // log.info("masuk if validate == null");
                     throw new ServletException("No CAS validation URL specified. You need to set property 'cas.validate.url'");
                 }
 
@@ -187,25 +187,24 @@ public class CASAuthentication implements AuthenticationMethod {
                 netid = validate(service, ticket, validate);
             
                 if (netid == null) {
-                    log.info("masuk netid == null");
-                    
+                    // log.info("masuk netid == null");
                     throw new ServletException("Ticket is not valid");
                 }
 
                 // Locate the eperson in DSpace
                 EPerson eperson = null;
                 try {
-                    log.info("masuk eperson = epersonservicefactory.getinstance()......");
+                    // log.info("masuk eperson = epersonservicefactory.getinstance()......");
                     eperson = EPersonServiceFactory.getInstance().getEPersonService().findByNetid(context, netid.toLowerCase());
                 } catch (SQLException e) {
-                    log.info("masuk catch (SQLException e)");
+                    // log.info("masuk catch (SQLException e)");
                     log.error("cas findbynetid failed");
                     log.error(e.getStackTrace());
                 }
 
                 // if they entered a netd that matches an eperson and they are allowed to login
                 if (eperson != null) {
-                    log.info("masuk if eperson != null");
+                    // log.info("masuk if eperson != null");
                   // e-mail address corresponds to active account
                     if (eperson.getRequireCertificate()) {
                         // they must use a certificate
@@ -277,7 +276,7 @@ public class CASAuthentication implements AuthenticationMethod {
                             netid + "  type=CAS auto-register"));
                         return SUCCESS;
                     } else {
-                        log.info("masuk else (line 278) return NO_SUCH_USER");
+                        // log.info("masuk else (line 278) return NO_SUCH_USER");
                         // No auto-registration for valid netid
                         log.warn(LogManager.getHeader(context, "authenticate",
                             netid + "  type=netid_but_no_record, cannot auto-register"));
@@ -290,7 +289,7 @@ public class CASAuthentication implements AuthenticationMethod {
                 //throw new ServletException(e);
             }
         } else {
-            log.info("masuk ticket == null");
+            // log.info("masuk ticket == null");
         }
         return BAD_ARGS;
     }
@@ -315,7 +314,7 @@ public class CASAuthentication implements AuthenticationMethod {
     public String validate(String service, String ticket, String validateURL) throws 
     IOException, ServletException, ParserConfigurationException, SAXException {
 
-        log.info("masuk method validate");
+        // log.info("masuk method validate");
         //log.info(ticket);
         String netid = null;
         firstName = "University";
@@ -372,8 +371,9 @@ public class CASAuthentication implements AuthenticationMethod {
         String xmlResponse = stv.getResponse();
         // log.info("[COBA] XML RESPONSE: " + xmlResponse);
         parse(xmlResponse);
-        log.info("lewat parse(xmlResponse)");
+        // log.info("lewat parse(xmlResponse)");
 
+        
         /*
         if (!this.isFK) {
             // TODO add error message "unauthorized access"
@@ -389,18 +389,18 @@ public class CASAuthentication implements AuthenticationMethod {
         String nama = namaLdap.trim();
         int i = nama.length() - 1; 
         while (i >= 0 && nama.charAt(i) != ' ') {
-            log.info("masuk while i >= 0 ");
+            // log.info("masuk while i >= 0 ");
             --i; 
         } 
         if (i == 0) {
-            log.info("masuk if i == 0");
+            // log.info("masuk if i == 0");
             i = nama.length();
         }
 
         lastName = nama.substring(i);
 
         if (i != 0) {
-            log.info("masuk if i != 0");
+            // log.info("masuk if i != 0");
             ++i;
         }
 
@@ -439,7 +439,7 @@ public class CASAuthentication implements AuthenticationMethod {
      */
     public String loginPageURL(Context context,HttpServletRequest request, HttpServletResponse response) {
         // Determine CAS server URL
-        log.info("masuk method loginPageURL");
+        // log.info("masuk method loginPageURL");
         final String authServer = configurationService.getProperty("authentication-cas.cas.server.url");
         StringBuffer url = new StringBuffer(authServer);
         url.append("?service=").append(request.getScheme()).
@@ -451,7 +451,6 @@ public class CASAuthentication implements AuthenticationMethod {
             
         url.append(request.getContextPath()).append("/cas-login");
         log.info("CAS server and service:  " + authServer);
-        //System.out.println(url);
         
         // Redirect to CAS server
         return response.encodeRedirectURL(url.toString());
@@ -472,15 +471,15 @@ public class CASAuthentication implements AuthenticationMethod {
     }
 
     private void parse(String response) throws ParserConfigurationException, SAXException, IOException {
-        log.info("masuk method parse");
+        // log.info("masuk method parse");
         XMLReader r =  SAXParserFactory.newInstance().newSAXParser().getXMLReader(); 
-        log.info("lewat XMLReader r =");
+        //log.info("lewat XMLReader r =");
         r.setFeature("http://xml.org/sax/features/namespaces", false); 
-        log.info("lewat r.setFeature(, false)");
+        //log.info("lewat r.setFeature(, false)");
         r.setContentHandler(newHandler()); 
-        log.info("lewat r.setcontenthandler()");
+        //log.info("lewat r.setcontenthandler()");
         r.parse(new InputSource(new StringReader(response)));
-        log.info("lewat r.parse(new inputsource(new stringreader))");
+        //log.info("lewat r.parse(new inputsource(new stringreader))");
     }
 
     protected DefaultHandler newHandler() { return new Handler(); }
@@ -505,7 +504,7 @@ public class CASAuthentication implements AuthenticationMethod {
         //**********************************************
         // Parsing logic
         public void startElement(String ns, String ln, String qn, Attributes a) {
-             // clear the buffer
+            // clear the buffer
             currentText = new StringBuffer();
     
         }

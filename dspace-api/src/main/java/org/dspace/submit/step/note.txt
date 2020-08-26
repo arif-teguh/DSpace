@@ -1,0 +1,9 @@
+Step 1: <processing-class>org.dspace.submit.step.SkipInitialQuestionsStep</processing-class>
+Step 2: <processing-class>org.dspace.submit.step.DescribeStep</processing-class>
+        <jspui-binding>org.dspace.app.webui.submit.step.JSPDescribeStep</jspui-binding>
+Step 3: <processing-class>org.dspace.submit.step.AccessStep</processing-class>
+    	<jspui-binding>org.dspace.app.webui.submit.step.JSPAccessStep</jspui-binding>
+        <xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.AccessStep</xmlui-binding>
+Step 4: <processing-class>org.dspace.submit.step.UploadStep</processing-class>
+        <jspui-binding>org.dspace.app.webui.submit.step.JSPUploadStep</jspui-binding>
+

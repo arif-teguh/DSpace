@@ -230,13 +230,14 @@
 	      </step>
 
 	      <!--Step 6 will be to select a Creative Commons License-->
-	      <step>
+      
+	      <!--step>
 		<heading>submit.progressbar.CClicense</heading>
 		<processing-class>org.dspace.submit.step.CCLicenseStep</processing-class>
 		<jspui-binding>org.dspace.app.webui.submit.step.JSPCCLicenseStep</jspui-binding>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.CCLicenseStep</xmlui-binding>
 			<workflow-editable>false</workflow-editable>
-	      </step>
+	      </step-->
 
 	      <!--Step 7 will be to Sign off on the License-->
 	      <step>
